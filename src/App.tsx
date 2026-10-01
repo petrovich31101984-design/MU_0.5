@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-type Tab = 'overview' | 'roles' | 'architecture' | 'database' | 'flows' | 'features' | 'roadmap';
+type Tab = 'overview' | 'roles' | 'architecture' | 'database' | 'flows' | 'features' | 'roadmap' | 'setup';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('overview');
@@ -13,6 +13,7 @@ function App() {
     { id: 'flows', label: 'Потоки данных', icon: '🔄' },
     { id: 'features', label: 'Функции', icon: '⚙️' },
     { id: 'roadmap', label: 'Дорожная карта', icon: '🗺️' },
+    { id: 'setup', label: 'Установка БД', icon: '🚀' },
   ];
 
   return (
@@ -63,6 +64,7 @@ function App() {
         {activeTab === 'flows' && <FlowsTab />}
         {activeTab === 'features' && <FeaturesTab />}
         {activeTab === 'roadmap' && <RoadmapTab />}
+        {activeTab === 'setup' && <SetupTab />}
       </main>
 
       {/* Footer */}
@@ -1150,6 +1152,405 @@ function AltItem({ current, alternative, when }: { current: string; alternative:
         <span className="text-sm font-semibold text-emerald-300">{alternative}</span>
       </div>
       <p className="text-xs text-blue-400">{when}</p>
+    </div>
+  );
+}
+
+function SetupTab() {
+  const [copied, setCopied] = useState(false);
+  const [scriptCode, setScriptCode] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/google-apps-script.js')
+      .then(res => res.text())
+      .then(text => {
+        setScriptCode(text);
+        setLoading(false);
+      })
+      .catch(() => {
+        setScriptCode('// Не удалось загрузить код. Файл: public/google-apps-script.js');
+        setLoading(false);
+      });
+  }, []);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(scriptCode).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
+    });
+  };
+
+  const downloadScript = () => {
+    const blob = new Blob([scriptCode], { type: 'text/javascript' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'setup-database.js';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Заголовок */}
+      <div className="bg-gradient-to-br from-emerald-500/20 to-blue-500/10 rounded-2xl p-8 border border-emerald-500/30">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-14 h-14 bg-emerald-500/20 rounded-xl flex items-center justify-center text-3xl">
+            🚀
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-emerald-400">Установка базы данных</h2>
+            <p className="text-blue-300">Автоматическое развёртывание всех листов в Google Sheets</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+          <div className="bg-black/20 rounded-lg p-3 text-center">
+            <div className="text-2xl font-bold text-white">11</div>
+            <div className="text-xs text-blue-300">Листов будет создано</div>
+          </div>
+          <div className="bg-black/20 rounded-lg p-3 text-center">
+            <div className="text-2xl font-bold text-white">~30 сек</div>
+            <div className="text-xs text-blue-300">Время установки</div>
+          </div>
+          <div className="bg-black/20 rounded-lg p-3 text-center">
+            <div className="text-2xl font-bold text-white">100+</div>
+            <div className="text-xs text-blue-300">Столбцов с валидацией</div>
+          </div>
+          <div className="bg-black/20 rounded-lg p-3 text-center">
+            <div className="text-2xl font-bold text-white">0 ₽</div>
+            <div className="text-xs text-blue-300">Стоимость</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Пошаговая инструкция */}
+      <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
+        <h3 className="text-xl font-bold text-blue-400 mb-6">📋 Пошаговая инструкция</h3>
+        
+        <div className="space-y-4">
+          <StepItem 
+            number={1} 
+            title="Создайте новую Google таблицу"
+            description="Перейдите на sheets.google.com и создайте новую пустую таблицу. Назовите её, например: «Учёт лекарственных средств»"
+            link="https://sheets.google.com"
+          />
+          <StepItem 
+            number={2} 
+            title="Откройте редактор Apps Script"
+            description="В меню таблицы выберите: Расширения → Apps Script (Extensions → Apps Script)"
+          />
+          <StepItem 
+            number={3} 
+            title="Вставьте код скрипта"
+            description="Удалите весь существующий код в редакторе и вставьте скопированный код (кнопка ниже). Или скачайте файл и откройте его."
+          />
+          <StepItem 
+            number={4} 
+            title="Запустите функцию setupDatabase"
+            description="В верхней панели выберите функцию 'setupDatabase' и нажмите кнопку ▶ (Выполнить). При первом запуске потребуется авторизация — разрешите доступ."
+          />
+          <StepItem 
+            number={5} 
+            title="Дождитесь завершения"
+            description="Скрипт создаст все 11 листов с заголовками, форматированием, валидацией данных и примерами. Появится уведомление об успешном завершении."
+          />
+          <StepItem 
+            number={6} 
+            title="Проверьте результат"
+            description="Вернитесь в таблицу — внизу вы увидите все созданные листы. Можете удалить примеры данных и начать заполнение реальными данными."
+          />
+        </div>
+      </div>
+
+      {/* Кнопки действий */}
+      <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
+        <h3 className="text-xl font-bold text-blue-400 mb-6">⚡ Действия</h3>
+        
+        <div className="flex flex-wrap gap-4">
+          <button
+            onClick={copyToClipboard}
+            disabled={loading}
+            className={`px-6 py-3 rounded-xl font-semibold transition-all flex items-center gap-2 ${
+              copied 
+                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30' 
+                : 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30'
+            }`}
+          >
+            {copied ? (
+              <>
+                <span>✅</span>
+                <span>Скопировано!</span>
+              </>
+            ) : (
+              <>
+                <span>📋</span>
+                <span>Скопировать код</span>
+              </>
+            )}
+          </button>
+
+          <button
+            onClick={downloadScript}
+            disabled={loading}
+            className="px-6 py-3 rounded-xl font-semibold bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-600/30 transition-all flex items-center gap-2"
+          >
+            <span>💾</span>
+            <span>Скачать файл .js</span>
+          </button>
+
+          <a
+            href="https://sheets.google.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-6 py-3 rounded-xl font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/30 transition-all flex items-center gap-2"
+          >
+            <span>📊</span>
+            <span>Открыть Google Sheets</span>
+          </a>
+        </div>
+      </div>
+
+      {/* Код скрипта */}
+      <div className="bg-white/5 rounded-2xl border border-white/10 overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-black/20">
+          <div className="flex items-center gap-3">
+            <div className="flex gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <span className="text-sm font-mono text-blue-300">setup-database.js</span>
+          </div>
+          <button
+            onClick={copyToClipboard}
+            className="px-3 py-1 rounded text-xs bg-white/10 hover:bg-white/20 text-blue-200 transition-colors"
+          >
+            {copied ? '✅ Скопировано' : '📋 Копировать'}
+          </button>
+        </div>
+        
+        <div className="max-h-[600px] overflow-auto">
+          <pre className="p-6 text-xs font-mono text-blue-200 leading-relaxed whitespace-pre">
+            {loading ? '⏳ Загрузка кода...' : scriptCode}
+          </pre>
+        </div>
+      </div>
+
+      {/* Список созданных листов */}
+      <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
+        <h3 className="text-xl font-bold text-blue-400 mb-6">📑 Будут созданы следующие листы</h3>
+        
+        <div className="grid md:grid-cols-2 gap-4">
+          <SheetPreview name="Сотрудники" desc="Данные сотрудников, авторизация, статусы" rows="~30" color="emerald" />
+          <SheetPreview name="Номенклатура" desc="Справочник лекарств, оборудования, расходников" rows="~50" color="emerald" />
+          <SheetPreview name="Цены" desc="История цен с версионностью" rows="~50" color="blue" />
+          <SheetPreview name="Приход" desc="Поступление препаратов на сотрудника" rows="~360/год" color="blue" />
+          <SheetPreview name="Расход" desc="Расход по каждому пациенту" rows="~10000/год" color="orange" />
+          <SheetPreview name="Возвраты" desc="Операции возврата на склад" rows="~100/год" color="yellow" />
+          <SheetPreview name="Начальные остатки" desc="Остатки при первом подключении" rows="~300" color="purple" />
+          <SheetPreview name="Чат" desc="Сообщения между участниками" rows="~1000/мес" color="purple" />
+          <SheetPreview name="Журнал изменений" desc="Аудит всех действий" rows="~50000/год" color="red" />
+          <SheetPreview name="Настройки" desc="Системные параметры" rows="10" color="red" />
+          <SheetPreview name="Отчёты" desc="Сформированные отчёты" rows="~100/год" color="emerald" />
+        </div>
+      </div>
+
+      {/* Примеры данных */}
+      <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
+        <h3 className="text-xl font-bold text-blue-400 mb-6">📝 Примеры данных (предзаполнены)</h3>
+        
+        <div className="space-y-4">
+          <div className="bg-black/20 rounded-lg p-4">
+            <h4 className="font-bold text-emerald-300 mb-2">Сотрудники (3 примера)</h4>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-white/10">
+                    <th className="text-left py-1 px-2 text-blue-400">Перс. номер</th>
+                    <th className="text-left py-1 px-2 text-blue-400">ФИО</th>
+                    <th className="text-left py-1 px-2 text-blue-400">Статус</th>
+                    <th className="text-left py-1 px-2 text-blue-400">Должность</th>
+                  </tr>
+                </thead>
+                <tbody className="text-blue-200">
+                  <tr className="border-b border-white/5">
+                    <td className="py-1 px-2">001</td>
+                    <td className="py-1 px-2">Иванов Иван Иванович</td>
+                    <td className="py-1 px-2"><span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Активен</span></td>
+                    <td className="py-1 px-2">Врач</td>
+                  </tr>
+                  <tr className="border-b border-white/5">
+                    <td className="py-1 px-2">002</td>
+                    <td className="py-1 px-2">Петрова Мария Сергеевна</td>
+                    <td className="py-1 px-2"><span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Активен</span></td>
+                    <td className="py-1 px-2">Фельдшер</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 px-2">003</td>
+                    <td className="py-1 px-2">Сидоров Алексей Петрович</td>
+                    <td className="py-1 px-2"><span className="px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-300">Отпуск</span></td>
+                    <td className="py-1 px-2">Врач</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-blue-400 mt-2">Пароли: pass123, pass456, pass789 (хэшированы в SHA-256)</p>
+          </div>
+
+          <div className="bg-black/20 rounded-lg p-4">
+            <h4 className="font-bold text-emerald-300 mb-2">Номенклатура (8 примеров)</h4>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-white/10">
+                    <th className="text-left py-1 px-2 text-blue-400">Название</th>
+                    <th className="text-left py-1 px-2 text-blue-400">Категория</th>
+                    <th className="text-left py-1 px-2 text-blue-400">Ед. изм.</th>
+                    <th className="text-left py-1 px-2 text-blue-400">Цена</th>
+                  </tr>
+                </thead>
+                <tbody className="text-blue-200">
+                  <tr className="border-b border-white/5">
+                    <td className="py-1 px-2">Адреналин 0.1% 1мл</td>
+                    <td className="py-1 px-2">Лекарство</td>
+                    <td className="py-1 px-2">Ампулы</td>
+                    <td className="py-1 px-2">45.00 ₽</td>
+                  </tr>
+                  <tr className="border-b border-white/5">
+                    <td className="py-1 px-2">Дексаметазон 4мг/мл 2мл</td>
+                    <td className="py-1 px-2">Лекарство</td>
+                    <td className="py-1 px-2">Ампулы</td>
+                    <td className="py-1 px-2">32.50 ₽</td>
+                  </tr>
+                  <tr className="border-b border-white/5">
+                    <td className="py-1 px-2">Тонометр Omron M2 Basic</td>
+                    <td className="py-1 px-2">Оборудование</td>
+                    <td className="py-1 px-2">Штуки</td>
+                    <td className="py-1 px-2">3 200.00 ₽</td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 px-2">Шприц 5мл</td>
+                    <td className="py-1 px-2">Расходный материал</td>
+                    <td className="py-1 px-2">Штуки</td>
+                    <td className="py-1 px-2">8.50 ₽</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Предупреждения */}
+      <div className="bg-yellow-500/10 rounded-2xl p-8 border border-yellow-500/30">
+        <h3 className="text-xl font-bold text-yellow-400 mb-4">⚠️ Важно знать</h3>
+        <div className="space-y-3">
+          <div className="flex items-start gap-3">
+            <span className="text-yellow-400">•</span>
+            <p className="text-blue-200 text-sm">
+              <strong className="text-white">Примеры данных</strong> — после установки вы можете удалить примеры и начать заполнение реальными данными. 
+              IDs (EMP-001, NOM-001 и т.д.) используются для связи между листами.
+            </p>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="text-yellow-400">•</span>
+            <p className="text-blue-200 text-sm">
+              <strong className="text-white">Пароли</strong> — хранятся в хэшированном виде (SHA-256). Примеры: pass123, pass456, pass789. 
+              В реальном использовании рекомендуем сменить пароли.
+            </p>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="text-yellow-400">•</span>
+            <p className="text-blue-200 text-sm">
+              <strong className="text-white">Безопасность</strong> — настройте доступ к таблице: только вы и API-сервис должны иметь доступ. 
+              В Apps Script → Deploy → Web App для интеграции с веб-приложением.
+            </p>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="text-yellow-400">•</span>
+            <p className="text-blue-200 text-sm">
+              <strong className="text-white">Резервное копирование</strong> — Google Sheets автоматически хранит историю версий. 
+              Дополнительно рекомендуем еженедельно делать копию таблицы.
+            </p>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="text-yellow-400">•</span>
+            <p className="text-blue-200 text-sm">
+              <strong className="text-white">Меню в таблице</strong> — после установки в таблице появится кастомное меню «📋 Система учёта» 
+              с функциями отчётов, экспорта и проверки.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* API функции */}
+      <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
+        <h3 className="text-xl font-bold text-blue-400 mb-4">🔌 API функции (для веб-приложения)</h3>
+        <p className="text-blue-300 mb-4">Скрипт включает готовые функции для интеграции с веб-приложением:</p>
+        
+        <div className="grid md:grid-cols-2 gap-3">
+          <ApiFunction name="apiGetEmployees()" desc="Получить список всех сотрудников" />
+          <ApiFunction name="apiGetNomenclature()" desc="Получить справочник номенклатуры" />
+          <ApiFunction name="apiGetCurrentPrices()" desc="Получить актуальные цены" />
+          <ApiFunction name="apiLogin(number, password)" desc="Авторизация сотрудника" />
+          <ApiFunction name="apiAddExpense(data)" desc="Добавить запись о расходе" />
+          <ApiFunction name="writeAuditLog(...)" desc="Записать действие в журнал" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StepItem({ number, title, description, link }: { number: number; title: string; description: string; link?: string }) {
+  return (
+    <div className="flex items-start gap-4 p-4 bg-black/20 rounded-lg">
+      <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-lg font-bold shrink-0">
+        {number}
+      </div>
+      <div className="flex-1">
+        <div className="flex items-center gap-2">
+          <h4 className="font-bold text-white">{title}</h4>
+          {link && (
+            <a href={link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:text-blue-300">
+              ↗
+            </a>
+          )}
+        </div>
+        <p className="text-sm text-blue-300 mt-1">{description}</p>
+      </div>
+    </div>
+  );
+}
+
+function SheetPreview({ name, desc, rows, color }: { name: string; desc: string; rows: string; color: string }) {
+  const colorClasses: Record<string, string> = {
+    emerald: 'border-emerald-500/30 bg-emerald-500/5',
+    blue: 'border-blue-500/30 bg-blue-500/5',
+    orange: 'border-orange-500/30 bg-orange-500/5',
+    yellow: 'border-yellow-500/30 bg-yellow-500/5',
+    purple: 'border-purple-500/30 bg-purple-500/5',
+    red: 'border-red-500/30 bg-red-500/5',
+  };
+
+  return (
+    <div className={`rounded-lg p-4 border ${colorClasses[color]}`}>
+      <div className="flex items-center justify-between mb-1">
+        <h4 className="font-bold text-white text-sm">{name}</h4>
+        <span className="text-xs text-blue-400">{rows}</span>
+      </div>
+      <p className="text-xs text-blue-300">{desc}</p>
+    </div>
+  );
+}
+
+function ApiFunction({ name, desc }: { name: string; desc: string }) {
+  return (
+    <div className="bg-black/20 rounded-lg p-3">
+      <code className="text-sm text-emerald-300 font-mono">{name}</code>
+      <p className="text-xs text-blue-300 mt-1">{desc}</p>
     </div>
   );
 }
