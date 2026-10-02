@@ -291,7 +291,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-900 flex">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-slate-800 border-r border-slate-700 flex flex-col transition-all duration-300 fixed h-full z-40`}>
+      <aside className={`${sidebarOpen ? 'w-80' : 'w-20'} bg-slate-800 border-r border-slate-700 flex flex-col transition-all duration-300 fixed h-full z-40`}>
         <div className="p-4 border-b border-slate-700 flex items-center gap-3">
           <img 
             src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" 
@@ -301,7 +301,9 @@ export default function App() {
           {sidebarOpen && (
             <div className="overflow-hidden">
               <h1 className="text-sm font-bold text-white whitespace-nowrap">АлкоСпас</h1>
-              <p className="text-xs text-slate-400 whitespace-nowrap">Система учёта лекарственных средств (v. 0.5)</p>
+              <p className="text-xs text-slate-400 leading-tight">
+                Система учёта лекарственных средств <span className="text-emerald-400 font-semibold">(v. 0.5)</span>
+              </p>
             </div>
           )}
         </div>
@@ -332,7 +334,7 @@ export default function App() {
       </aside>
 
       {/* Main */}
-      <div className={`flex-1 ${sidebarOpen ? 'ml-64' : 'ml-20'} transition-all duration-300`}>
+      <div className={`flex-1 ${sidebarOpen ? 'ml-80' : 'ml-20'} transition-all duration-300`}>
         <header className="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-6 sticky top-0 z-30">
           <div className="flex items-center gap-4">
             <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-lg hover:bg-slate-700 text-slate-400">
