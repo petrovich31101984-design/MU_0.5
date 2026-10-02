@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
 import Nomenclature from './pages/Nomenclature';
@@ -8,27 +8,15 @@ import Chat from './pages/Chat';
 import Reports from './pages/Reports';
 import AuditLog from './pages/AuditLog';
 import Settings from './pages/Settings';
-import GoogleSheetsSetup from './pages/GoogleSheetsSetup';
 import { notifications as initialNotifications } from './mockData';
-import { googleSheetsService } from './services/googleSheets';
 
-type Page = 'dashboard' | 'employees' | 'nomenclature' | 'operations' | 'stock' | 'chat' | 'reports' | 'audit' | 'settings' | 'google-sheets';
+type Page = 'dashboard' | 'employees' | 'nomenclature' | 'operations' | 'stock' | 'chat' | 'reports' | 'audit' | 'settings';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifs, setNotifs] = useState(initialNotifications);
-  const [sheetsConnected, setSheetsConnected] = useState(googleSheetsService.getConfig().connected);
-
-  useEffect(() => {
-    const unsubscribe = googleSheetsService.subscribe(() => {
-      setSheetsConnected(googleSheetsService.getConfig().connected);
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, []);
 
   const unreadCount = notifs.filter(n => !n.read).length;
 
@@ -45,7 +33,6 @@ function App() {
     { id: 'chat', label: 'Сообщения', icon: '💬', badge: notifs.filter(n => n.type === 'message' && !n.read).length },
     { id: 'reports', label: 'Отчёты', icon: '📈' },
     { id: 'audit', label: 'Журнал', icon: '📝' },
-    { id: 'google-sheets', label: 'Google Sheets', icon: '📊' },
     { id: 'settings', label: 'Настройки', icon: '⚙️' },
   ];
 
@@ -59,7 +46,6 @@ function App() {
       case 'chat': return <Chat />;
       case 'reports': return <Reports />;
       case 'audit': return <AuditLog />;
-      case 'google-sheets': return <GoogleSheetsSetup />;
       case 'settings': return <Settings />;
     }
   };
@@ -137,20 +123,6 @@ function App() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Google Sheets Connection Status */}
-            <button
-              onClick={() => setCurrentPage('google-sheets')}
-              className={`p-2 rounded-lg transition-colors flex items-center gap-2 ${
-                sheetsConnected 
-                  ? 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30' 
-                  : 'bg-slate-700 text-slate-400 hover:bg-slate-600'
-              }`}
-              title={sheetsConnected ? 'Google Sheets: Подключено' : 'Google Sheets: Не подключено'}
-            >
-              <span className="text-sm">📊</span>
-              <span className={`w-2 h-2 rounded-full ${sheetsConnected ? 'bg-emerald-400' : 'bg-slate-500'}`}></span>
-            </button>
-
             {/* Notifications */}
             <div className="relative">
               <button

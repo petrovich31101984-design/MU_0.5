@@ -160,19 +160,11 @@ export default function Settings() {
           <div className="flex items-center justify-between py-2">
             <div>
               <div className="text-sm text-white">Подключение к Google Sheets</div>
-              <div className="text-xs text-slate-500">Настройка интеграции с Google Sheets API</div>
+              <div className="text-xs text-slate-500">URL таблицы и API ключ</div>
             </div>
-            <a
-              href="#google-sheets"
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.hash = 'google-sheets';
-                window.dispatchEvent(new HashChangeEvent('hashchange'));
-              }}
-              className="px-3 py-1.5 bg-blue-600/20 text-blue-400 rounded-lg text-sm hover:bg-blue-600/30"
-            >
-              Настроить →
-            </a>
+            <button className="px-3 py-1.5 bg-blue-600/20 text-blue-400 rounded-lg text-sm hover:bg-blue-600/30">
+              Настроить
+            </button>
           </div>
           <div className="flex items-center justify-between py-2">
             <div>
