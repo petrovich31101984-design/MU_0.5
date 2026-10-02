@@ -161,14 +161,7 @@ export default function App() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="w-48 h-48 mx-auto mb-6 animate-pulse rounded-2xl bg-white p-2" style={{
-            borderLeft: '4px solid #ef4444',
-            borderBottom: '4px solid #ef4444',
-            borderRight: '4px solid #3b82f6',
-            borderTop: '4px solid #3b82f6'
-          }}>
-            <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-full h-full object-contain" />
-          </div>
+          <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-48 h-48 object-contain mx-auto mb-6 animate-pulse" />
           <div className="text-slate-800 text-xl font-semibold mb-2">Загрузка данных...</div>
           <div className="text-slate-500 text-sm">Подключение к Google Sheets</div>
           <div className="mt-6 flex justify-center gap-1.5">
