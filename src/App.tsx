@@ -289,10 +289,10 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex">
+    <div className="min-h-screen bg-white flex">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-80' : 'w-20'} bg-slate-800 border-r border-slate-700 flex flex-col transition-all duration-300 fixed h-full z-40`}>
-        <div className="p-4 border-b border-slate-700 flex items-center gap-3">
+      <aside className={`${sidebarOpen ? 'w-80' : 'w-20'} bg-white border-r-4 border-blue-400 flex flex-col transition-all duration-300 fixed h-full z-40 shadow-sm`}>
+        <div className="p-4 border-b-4 border-blue-400 flex items-center gap-3">
           <img 
             src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" 
             alt="АлкоСпас" 
@@ -311,10 +311,10 @@ export default function App() {
             <button
               key={item.id}
               onClick={() => setCurrentPage(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-all border-b-2 border-blue-200 ${
                 currentPage === item.id
-                  ? 'bg-blue-600/20 text-blue-400 border-r-2 border-blue-400'
-                  : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
+                  ? 'bg-blue-50 text-blue-600 border-l-4 border-l-blue-500'
+                  : 'text-slate-700 hover:bg-blue-50/50 hover:text-blue-600'
               }`}
             >
               <span className="text-xl shrink-0">{item.icon}</span>
@@ -323,10 +323,10 @@ export default function App() {
           ))}
         </nav>
         {sidebarOpen && (
-          <div className="p-4 border-t border-slate-700">
+          <div className="p-4 border-t-4 border-blue-400">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
-              <span className="text-xs text-slate-400">Подключено к Google Sheets</span>
+              <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+              <span className="text-xs text-slate-600">Подключено к Google Sheets</span>
             </div>
           </div>
         )}
@@ -334,23 +334,23 @@ export default function App() {
 
       {/* Main */}
       <div className={`flex-1 ${sidebarOpen ? 'ml-80' : 'ml-20'} transition-all duration-300`}>
-        <header className="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-6 sticky top-0 z-30">
+        <header className="h-16 bg-white border-b-4 border-blue-400 flex items-center justify-between px-6 sticky top-0 z-30 shadow-sm">
           <div className="flex items-center gap-4">
-            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-lg hover:bg-slate-700 text-slate-400">
+            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-lg hover:bg-blue-50 text-slate-600">
               {sidebarOpen ? '◀' : '▶'}
             </button>
-            <h2 className="text-lg font-semibold text-white">
+            <h2 className="text-lg font-semibold text-slate-800">
               {menuItems.find(m => m.id === currentPage)?.label}
             </h2>
           </div>
           <div className="flex items-center gap-3">
-            <button onClick={() => data.refresh()} className="p-2 rounded-lg hover:bg-slate-700 text-slate-400" title="Обновить данные">🔄</button>
-            <div className="text-sm text-slate-400 hidden md:block">
+            <button onClick={() => data.refresh()} className="p-2 rounded-lg hover:bg-blue-50 text-slate-600" title="Обновить данные">🔄</button>
+            <div className="text-sm text-slate-600 hidden md:block">
               {new Date().toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'short' })}
             </div>
           </div>
         </header>
-        <main className="p-6">{renderPage()}</main>
+        <main className="p-6 bg-slate-50 min-h-[calc(100vh-4rem)]">{renderPage()}</main>
       </div>
     </div>
   );
@@ -379,54 +379,54 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
     <div className="space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-slate-800 rounded-xl p-5 border border-slate-700">
+        <div className="bg-white rounded-xl p-5 border-b-4 border-blue-400 shadow-sm">
           <div className="text-2xl mb-2">💰</div>
-          <div className="text-2xl font-bold text-emerald-400">{totalArrival.toLocaleString('ru-RU')} ₽</div>
-          <div className="text-sm text-slate-400">Общий приход</div>
+          <div className="text-2xl font-bold text-emerald-600">{totalArrival.toLocaleString('ru-RU')} ₽</div>
+          <div className="text-sm text-slate-600">Общий приход</div>
         </div>
-        <div className="bg-slate-800 rounded-xl p-5 border border-slate-700">
+        <div className="bg-white rounded-xl p-5 border-b-4 border-blue-400 shadow-sm">
           <div className="text-2xl mb-2">📤</div>
-          <div className="text-2xl font-bold text-blue-400">{totalExpense.toLocaleString('ru-RU')} ₽</div>
-          <div className="text-sm text-slate-400">Общий расход</div>
+          <div className="text-2xl font-bold text-blue-600">{totalExpense.toLocaleString('ru-RU')} ₽</div>
+          <div className="text-sm text-slate-600">Общий расход</div>
         </div>
-        <div className="bg-slate-800 rounded-xl p-5 border border-slate-700">
+        <div className="bg-white rounded-xl p-5 border-b-4 border-blue-400 shadow-sm">
           <div className="text-2xl mb-2">📊</div>
-          <div className="text-2xl font-bold text-white">{(totalArrival - totalExpense).toLocaleString('ru-RU')} ₽</div>
-          <div className="text-sm text-slate-400">Остаток</div>
+          <div className="text-2xl font-bold text-slate-800">{(totalArrival - totalExpense).toLocaleString('ru-RU')} ₽</div>
+          <div className="text-sm text-slate-600">Остаток</div>
         </div>
-        <div className="bg-slate-800 rounded-xl p-5 border border-slate-700">
+        <div className="bg-white rounded-xl p-5 border-b-4 border-blue-400 shadow-sm">
           <div className="text-2xl mb-2">🚑</div>
-          <div className="text-2xl font-bold text-white">{totalCalls}</div>
-          <div className="text-sm text-slate-400">Вызовов за месяц</div>
+          <div className="text-2xl font-bold text-slate-800">{totalCalls}</div>
+          <div className="text-sm text-slate-600">Вызовов за месяц</div>
         </div>
       </div>
 
       {/* Alerts */}
       {pendingReturns > 0 && (
-        <div className="bg-orange-500/10 border border-orange-500/30 rounded-xl p-4 flex items-center gap-3">
+        <div className="bg-orange-50 border-l-4 border-orange-400 rounded-xl p-4 flex items-center gap-3 shadow-sm">
           <span className="text-2xl">↩️</span>
           <div className="flex-1">
-            <span className="text-orange-300 font-semibold">Ожидают обработки возвратов:</span>
-            <span className="text-orange-200 ml-2">{pendingReturns}</span>
+            <span className="text-orange-700 font-semibold">Ожидают обработки возвратов:</span>
+            <span className="text-orange-600 ml-2">{pendingReturns}</span>
           </div>
         </div>
       )}
 
       {/* Employees table */}
-      <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-        <div className="p-5 border-b border-slate-700">
-          <h3 className="text-lg font-bold text-white">📊 Сводка по сотрудникам ({currentMonth})</h3>
+      <div className="bg-white rounded-xl border-b-4 border-blue-400 overflow-hidden shadow-sm">
+        <div className="p-5 border-b-4 border-blue-400">
+          <h3 className="text-lg font-bold text-slate-800">📊 Сводка по сотрудникам ({currentMonth})</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-700 text-left">
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Сотрудник</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Статус</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Вызовы</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Приход (₽)</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Расход (₽)</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Остаток (₽)</th>
+              <tr className="border-b-4 border-blue-400 text-left bg-blue-50">
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Сотрудник</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Статус</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Вызовы</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Приход (₽)</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Расход (₽)</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Остаток (₽)</th>
               </tr>
             </thead>
             <tbody>
@@ -436,28 +436,28 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
                 const bal = arr - exp;
                 const calls = getCalls(emp.id);
                 return (
-                  <tr key={emp.id} className="border-b border-slate-700/50 hover:bg-slate-700/20">
+                  <tr key={emp.id} className="border-b-2 border-blue-200 hover:bg-blue-50/50">
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                          emp.status === 'Активен' ? 'bg-emerald-600' : emp.status === 'Отпуск' ? 'bg-yellow-600' : 'bg-slate-600'
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white ${
+                          emp.status === 'Активен' ? 'bg-emerald-500' : emp.status === 'Отпуск' ? 'bg-yellow-500' : 'bg-slate-400'
                         }`}>{emp.fullName[0]}</div>
                         <div>
-                          <div className="text-sm font-medium text-white">{emp.fullName}</div>
-                          <div className="text-xs text-slate-400">{emp.position}</div>
+                          <div className="text-sm font-medium text-slate-800">{emp.fullName}</div>
+                          <div className="text-xs text-slate-500">{emp.position}</div>
                         </div>
                       </div>
                     </td>
                     <td className="px-5 py-3">
                       <span className={`px-2 py-1 rounded-full text-xs ${
-                        emp.status === 'Активен' ? 'bg-emerald-500/20 text-emerald-400' :
-                        emp.status === 'Отпуск' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-slate-500/20 text-slate-400'
+                        emp.status === 'Активен' ? 'bg-emerald-100 text-emerald-700' :
+                        emp.status === 'Отпуск' ? 'bg-yellow-100 text-yellow-700' : 'bg-slate-100 text-slate-600'
                       }`}>{emp.status}</span>
                     </td>
-                    <td className="px-5 py-3 text-right text-sm text-white">{calls}</td>
-                    <td className="px-5 py-3 text-right text-sm text-emerald-400">{arr.toLocaleString('ru-RU')} ₽</td>
-                    <td className="px-5 py-3 text-right text-sm text-blue-400">{exp.toLocaleString('ru-RU')} ₽</td>
-                    <td className={`px-5 py-3 text-right text-sm font-semibold ${bal >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <td className="px-5 py-3 text-right text-sm text-slate-800">{calls}</td>
+                    <td className="px-5 py-3 text-right text-sm text-emerald-600">{arr.toLocaleString('ru-RU')} ₽</td>
+                    <td className="px-5 py-3 text-right text-sm text-blue-600">{exp.toLocaleString('ru-RU')} ₽</td>
+                    <td className={`px-5 py-3 text-right text-sm font-semibold ${bal >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
                       {bal.toLocaleString('ru-RU')} ₽
                     </td>
                   </tr>
@@ -515,10 +515,10 @@ function EmployeesPage({ data }: { data: ReturnType<typeof useData> }) {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white">Сотрудники</h2>
-          <p className="text-slate-400 text-sm mt-1">Всего: {employees.length} | Активных: {employees.filter(e => e.status === 'Активен').length}</p>
+          <h2 className="text-2xl font-bold text-slate-800">Сотрудники</h2>
+          <p className="text-slate-600 text-sm mt-1">Всего: {employees.length} | Активных: {employees.filter(e => e.status === 'Активен').length}</p>
         </div>
-        <button onClick={() => setShowAdd(true)} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white font-medium">
+        <button onClick={() => setShowAdd(true)} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white font-medium shadow-sm">
           + Добавить сотрудника
         </button>
       </div>
@@ -528,46 +528,46 @@ function EmployeesPage({ data }: { data: ReturnType<typeof useData> }) {
         placeholder="Поиск по ФИО или номеру..."
         value={search}
         onChange={e => setSearch(e.target.value)}
-        className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+        className="w-full px-4 py-2 bg-white border-b-4 border-blue-400 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none shadow-sm"
       />
 
-      <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+      <div className="bg-white rounded-xl border-b-4 border-blue-400 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-700 text-left">
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Сотрудник</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">№</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Статус</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Вызовы</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Приход</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Расход</th>
+              <tr className="border-b-4 border-blue-400 text-left bg-blue-50">
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Сотрудник</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">№</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Статус</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Вызовы</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Приход</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Расход</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map(emp => (
-                <tr key={emp.id} className="border-b border-slate-700/50 hover:bg-slate-700/20">
+                <tr key={emp.id} className="border-b-2 border-blue-200 hover:bg-blue-50/50">
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-3">
-                      <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold ${
-                        emp.status === 'Активен' ? 'bg-emerald-600' : emp.status === 'Отпуск' ? 'bg-yellow-600' : 'bg-slate-600'
+                      <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white ${
+                        emp.status === 'Активен' ? 'bg-emerald-500' : emp.status === 'Отпуск' ? 'bg-yellow-500' : 'bg-slate-400'
                       }`}>{emp.fullName[0]}</div>
                       <div>
-                        <div className="text-sm font-medium text-white">{emp.fullName}</div>
-                        <div className="text-xs text-slate-400">{emp.position}</div>
+                        <div className="text-sm font-medium text-slate-800">{emp.fullName}</div>
+                        <div className="text-xs text-slate-500">{emp.position}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-3 text-sm text-slate-300 font-mono">{emp.personalNumber}</td>
+                  <td className="px-5 py-3 text-sm text-slate-700 font-mono">{emp.personalNumber}</td>
                   <td className="px-5 py-3">
                     <span className={`px-2 py-1 rounded-full text-xs ${
-                      emp.status === 'Активен' ? 'bg-emerald-500/20 text-emerald-400' :
-                      emp.status === 'Отпуск' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-slate-500/20 text-slate-400'
+                      emp.status === 'Активен' ? 'bg-emerald-100 text-emerald-700' :
+                      emp.status === 'Отпуск' ? 'bg-yellow-100 text-yellow-700' : 'bg-slate-100 text-slate-600'
                     }`}>{emp.status}</span>
                   </td>
-                  <td className="px-5 py-3 text-right text-sm text-white">{getCalls(emp.id)}</td>
-                  <td className="px-5 py-3 text-right text-sm text-emerald-400">{getArrival(emp.id).toLocaleString('ru-RU')} ₽</td>
-                  <td className="px-5 py-3 text-right text-sm text-blue-400">{getExpenseValue(emp.id).toLocaleString('ru-RU')} ₽</td>
+                  <td className="px-5 py-3 text-right text-sm text-slate-800">{getCalls(emp.id)}</td>
+                  <td className="px-5 py-3 text-right text-sm text-emerald-600">{getArrival(emp.id).toLocaleString('ru-RU')} ₽</td>
+                  <td className="px-5 py-3 text-right text-sm text-blue-600">{getExpenseValue(emp.id).toLocaleString('ru-RU')} ₽</td>
                 </tr>
               ))}
             </tbody>
@@ -589,39 +589,39 @@ function EmployeesPage({ data }: { data: ReturnType<typeof useData> }) {
 function AddEmployeeModal({ onClose, onAdd }: { onClose: () => void; onAdd: (form: any) => void }) {
   const [form, setForm] = useState({ fullName: '', personalNumber: '', position: 'Врач', phone: '' });
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-slate-800 rounded-2xl border border-slate-700 w-full max-w-md">
-        <div className="p-6 border-b border-slate-700">
-          <h3 className="text-lg font-bold text-white">Добавить сотрудника</h3>
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl border-b-4 border-blue-400 w-full max-w-md shadow-xl">
+        <div className="p-6 border-b-4 border-blue-400">
+          <h3 className="text-lg font-bold text-slate-800">Добавить сотрудника</h3>
         </div>
         <div className="p-6 space-y-4">
           <div>
-            <label className="text-sm text-slate-400 mb-1 block">ФИО *</label>
+            <label className="text-sm text-slate-700 mb-1 block">ФИО *</label>
             <input type="text" value={form.fullName} onChange={e => setForm({ ...form, fullName: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500" />
+              className="w-full px-3 py-2 bg-white border-b-4 border-blue-400 rounded-lg text-slate-800 focus:outline-none" />
           </div>
           <div>
-            <label className="text-sm text-slate-400 mb-1 block">Персональный номер *</label>
+            <label className="text-sm text-slate-700 mb-1 block">Персональный номер *</label>
             <input type="text" value={form.personalNumber} onChange={e => setForm({ ...form, personalNumber: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500" />
+              className="w-full px-3 py-2 bg-white border-b-4 border-blue-400 rounded-lg text-slate-800 focus:outline-none" />
           </div>
           <div>
-            <label className="text-sm text-slate-400 mb-1 block">Должность</label>
+            <label className="text-sm text-slate-700 mb-1 block">Должность</label>
             <select value={form.position} onChange={e => setForm({ ...form, position: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500">
+              className="w-full px-3 py-2 bg-white border-b-4 border-blue-400 rounded-lg text-slate-800 focus:outline-none">
               <option>Врач</option><option>Фельдшер</option><option>Медсестра</option>
             </select>
           </div>
           <div>
-            <label className="text-sm text-slate-400 mb-1 block">Телефон</label>
+            <label className="text-sm text-slate-700 mb-1 block">Телефон</label>
             <input type="text" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500" />
+              className="w-full px-3 py-2 bg-white border-b-4 border-blue-400 rounded-lg text-slate-800 focus:outline-none" />
           </div>
         </div>
-        <div className="p-6 border-t border-slate-700 flex justify-end gap-3">
-          <button onClick={onClose} className="px-4 py-2 rounded-lg text-slate-400 hover:text-white">Отмена</button>
+        <div className="p-6 border-t-4 border-blue-400 flex justify-end gap-3">
+          <button onClick={onClose} className="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100">Отмена</button>
           <button onClick={() => onAdd(form)} disabled={!form.fullName || !form.personalNumber}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 rounded-lg text-white font-medium">Добавить</button>
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-300 rounded-lg text-white font-medium">Добавить</button>
         </div>
       </div>
     </div>
@@ -643,30 +643,30 @@ function NomenclaturePage({ data }: { data: ReturnType<typeof useData> }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-white">Номенклатура</h2>
-        <p className="text-slate-400 text-sm mt-1">Всего позиций: {nomenclature.length}</p>
+        <h2 className="text-2xl font-bold text-slate-800">Номенклатура</h2>
+        <p className="text-slate-600 text-sm mt-1">Всего позиций: {nomenclature.length}</p>
       </div>
 
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-          <div className="text-2xl font-bold text-emerald-400">{nomenclature.filter(n => n.category === 'Лекарство').length}</div>
-          <div className="text-xs text-slate-400">Лекарств</div>
+        <div className="bg-white rounded-lg p-4 border-b-4 border-blue-400 shadow-sm">
+          <div className="text-2xl font-bold text-emerald-600">{nomenclature.filter(n => n.category === 'Лекарство').length}</div>
+          <div className="text-xs text-slate-600">Лекарств</div>
         </div>
-        <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-          <div className="text-2xl font-bold text-blue-400">{nomenclature.filter(n => n.category === 'Оборудование').length}</div>
-          <div className="text-xs text-slate-400">Оборудования</div>
+        <div className="bg-white rounded-lg p-4 border-b-4 border-blue-400 shadow-sm">
+          <div className="text-2xl font-bold text-blue-600">{nomenclature.filter(n => n.category === 'Оборудование').length}</div>
+          <div className="text-xs text-slate-600">Оборудования</div>
         </div>
-        <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-          <div className="text-2xl font-bold text-purple-400">{nomenclature.filter(n => n.category === 'Расходный материал').length}</div>
-          <div className="text-xs text-slate-400">Расходных материалов</div>
+        <div className="bg-white rounded-lg p-4 border-b-4 border-blue-400 shadow-sm">
+          <div className="text-2xl font-bold text-purple-600">{nomenclature.filter(n => n.category === 'Расходный материал').length}</div>
+          <div className="text-xs text-slate-600">Расходных материалов</div>
         </div>
       </div>
 
       <div className="flex gap-3">
         <input type="text" placeholder="Поиск..." value={search} onChange={e => setSearch(e.target.value)}
-          className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500" />
+          className="flex-1 px-4 py-2 bg-white border-b-4 border-blue-400 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none shadow-sm" />
         <select value={catFilter} onChange={e => setCatFilter(e.target.value)}
-          className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500">
+          className="px-4 py-2 bg-white border-b-4 border-blue-400 rounded-lg text-slate-800 focus:outline-none shadow-sm">
           <option value="all">Все категории</option>
           <option value="Лекарство">Лекарства</option>
           <option value="Оборудование">Оборудование</option>
@@ -674,34 +674,34 @@ function NomenclaturePage({ data }: { data: ReturnType<typeof useData> }) {
         </select>
       </div>
 
-      <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+      <div className="bg-white rounded-xl border-b-4 border-blue-400 overflow-hidden shadow-sm">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-700 text-left">
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Название</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Категория</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Ед. изм.</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Цена (₽)</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-center">Статус</th>
+            <tr className="border-b-4 border-blue-400 text-left bg-blue-50">
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Название</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Категория</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Ед. изм.</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Цена (₽)</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-center">Статус</th>
             </tr>
           </thead>
           <tbody>
             {filtered.map(item => (
-              <tr key={item.id} className="border-b border-slate-700/50 hover:bg-slate-700/20">
+              <tr key={item.id} className="border-b-2 border-blue-200 hover:bg-blue-50/50">
                 <td className="px-5 py-3">
-                  <div className="text-sm font-medium text-white">{item.name}</div>
+                  <div className="text-sm font-medium text-slate-800">{item.name}</div>
                   <div className="text-xs text-slate-500 font-mono">{item.id}</div>
                 </td>
                 <td className="px-5 py-3">
                   <span className={`px-2 py-1 rounded-full text-xs ${
-                    item.category === 'Лекарство' ? 'bg-emerald-500/20 text-emerald-400' :
-                    item.category === 'Оборудование' ? 'bg-blue-500/20 text-blue-400' : 'bg-purple-500/20 text-purple-400'
+                    item.category === 'Лекарство' ? 'bg-emerald-100 text-emerald-700' :
+                    item.category === 'Оборудование' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
                   }`}>{item.category}</span>
                 </td>
-                <td className="px-5 py-3 text-sm text-slate-300">{item.unit}</td>
-                <td className="px-5 py-3 text-right text-sm font-semibold text-emerald-400">{item.currentPrice.toLocaleString('ru-RU')} ₽</td>
+                <td className="px-5 py-3 text-sm text-slate-700">{item.unit}</td>
+                <td className="px-5 py-3 text-right text-sm font-semibold text-emerald-600">{item.currentPrice.toLocaleString('ru-RU')} ₽</td>
                 <td className="px-5 py-3 text-center">
-                  <span className={`px-2 py-1 rounded-full text-xs ${item.active ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-500/20 text-slate-400'}`}>
+                  <span className={`px-2 py-1 rounded-full text-xs ${item.active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
                     {item.active ? 'Активна' : 'Неактивна'}
                   </span>
                 </td>
@@ -731,21 +731,21 @@ function OperationsPage({ data }: { data: ReturnType<typeof useData> }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-white">Операции</h2>
-        <p className="text-slate-400 text-sm mt-1">Приход, расход и возвраты</p>
+        <h2 className="text-2xl font-bold text-slate-800">Операции</h2>
+        <p className="text-slate-600 text-sm mt-1">Приход, расход и возвраты</p>
       </div>
 
-      <div className="flex gap-2 bg-slate-800 rounded-xl p-1 border border-slate-700">
+      <div className="flex gap-2 bg-white rounded-xl p-1 border-b-4 border-blue-400 shadow-sm">
         <button onClick={() => setSubTab('arrival')}
-          className={`flex-1 py-2.5 rounded-lg text-sm font-medium ${subTab === 'arrival' ? 'bg-emerald-600 text-white' : 'text-slate-400'}`}>
+          className={`flex-1 py-2.5 rounded-lg text-sm font-medium ${subTab === 'arrival' ? 'bg-emerald-500 text-white' : 'text-slate-600 hover:bg-blue-50'}`}>
           💰 Приход
         </button>
         <button onClick={() => setSubTab('expense')}
-          className={`flex-1 py-2.5 rounded-lg text-sm font-medium ${subTab === 'expense' ? 'bg-blue-600 text-white' : 'text-slate-400'}`}>
+          className={`flex-1 py-2.5 rounded-lg text-sm font-medium ${subTab === 'expense' ? 'bg-blue-500 text-white' : 'text-slate-600 hover:bg-blue-50'}`}>
           📤 Расход
         </button>
         <button onClick={() => setSubTab('returns')}
-          className={`flex-1 py-2.5 rounded-lg text-sm font-medium relative ${subTab === 'returns' ? 'bg-orange-600 text-white' : 'text-slate-400'}`}>
+          className={`flex-1 py-2.5 rounded-lg text-sm font-medium relative ${subTab === 'returns' ? 'bg-orange-500 text-white' : 'text-slate-600 hover:bg-blue-50'}`}>
           ↩️ Возвраты
           {returns.filter(r => r.status === 'Новый').length > 0 && (
             <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs flex items-center justify-center text-white">
@@ -758,40 +758,40 @@ function OperationsPage({ data }: { data: ReturnType<typeof useData> }) {
       {subTab === 'arrival' && (
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <div className="text-sm text-slate-400">
-              Приход за {currentMonth}: <span className="text-emerald-400 font-bold">
+            <div className="text-sm text-slate-600">
+              Приход за {currentMonth}: <span className="text-emerald-600 font-bold">
                 {arrivals.filter(a => a.month === currentMonth).reduce((s, a) => s + a.amount, 0).toLocaleString('ru-RU')} ₽
               </span>
             </div>
-            <button onClick={() => setShowAddArrival(true)} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white text-sm font-medium">
+            <button onClick={() => setShowAddArrival(true)} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white text-sm font-medium shadow-sm">
               + Внести приход
             </button>
           </div>
-          <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+          <div className="bg-white rounded-xl border-b-4 border-blue-400 overflow-hidden shadow-sm">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-700 text-left">
-                  <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Дата</th>
-                  <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Сотрудник</th>
-                  <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Тип</th>
-                  <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Сумма (₽)</th>
-                  <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Смены</th>
+                <tr className="border-b-4 border-blue-400 text-left bg-blue-50">
+                  <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Дата</th>
+                  <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Сотрудник</th>
+                  <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Тип</th>
+                  <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Сумма (₽)</th>
+                  <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Смены</th>
                 </tr>
               </thead>
               <tbody>
                 {arrivals.sort((a, b) => b.date.localeCompare(a.date)).map(arr => {
                   const emp = employees.find(e => e.id === arr.employeeId);
                   return (
-                    <tr key={arr.id} className="border-b border-slate-700/50 hover:bg-slate-700/20">
-                      <td className="px-5 py-3 text-sm text-slate-300">{arr.date}</td>
-                      <td className="px-5 py-3 text-sm text-white">{emp?.fullName || arr.employeeId}</td>
+                    <tr key={arr.id} className="border-b-2 border-blue-200 hover:bg-blue-50/50">
+                      <td className="px-5 py-3 text-sm text-slate-700">{arr.date}</td>
+                      <td className="px-5 py-3 text-sm text-slate-800">{emp?.fullName || arr.employeeId}</td>
                       <td className="px-5 py-3">
-                        <span className={`px-2 py-1 rounded-full text-xs ${arr.type === 'Плановый' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                        <span className={`px-2 py-1 rounded-full text-xs ${arr.type === 'Плановый' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}`}>
                           {arr.type}
                         </span>
                       </td>
-                      <td className="px-5 py-3 text-right text-sm font-semibold text-emerald-400">{arr.amount.toLocaleString('ru-RU')} ₽</td>
-                      <td className="px-5 py-3 text-right text-sm text-slate-300">{arr.shifts}</td>
+                      <td className="px-5 py-3 text-right text-sm font-semibold text-emerald-600">{arr.amount.toLocaleString('ru-RU')} ₽</td>
+                      <td className="px-5 py-3 text-right text-sm text-slate-700">{arr.shifts}</td>
                     </tr>
                   );
                 })}
@@ -820,15 +820,15 @@ function OperationsPage({ data }: { data: ReturnType<typeof useData> }) {
       )}
 
       {subTab === 'expense' && (
-        <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+        <div className="bg-white rounded-xl border-b-4 border-blue-400 overflow-hidden shadow-sm">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-700 text-left">
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Дата</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Сотрудник</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Пациент</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Препарат</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Кол-во</th>
+              <tr className="border-b-4 border-blue-400 text-left bg-blue-50">
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Дата</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Сотрудник</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Пациент</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Препарат</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Кол-во</th>
               </tr>
             </thead>
             <tbody>
@@ -836,15 +836,15 @@ function OperationsPage({ data }: { data: ReturnType<typeof useData> }) {
                 const emp = employees.find(e => e.id === exp.employeeId);
                 const nom = nomenclature.find(n => n.id === exp.nomenclatureId);
                 return (
-                  <tr key={exp.id} className="border-b border-slate-700/50 hover:bg-slate-700/20">
-                    <td className="px-5 py-3 text-sm text-slate-300">{exp.callDate}</td>
-                    <td className="px-5 py-3 text-sm text-white">{emp?.fullName.split(' ').slice(0, 2).join(' ')}</td>
+                  <tr key={exp.id} className="border-b-2 border-blue-200 hover:bg-blue-50/50">
+                    <td className="px-5 py-3 text-sm text-slate-700">{exp.callDate}</td>
+                    <td className="px-5 py-3 text-sm text-slate-800">{emp?.fullName.split(' ').slice(0, 2).join(' ')}</td>
                     <td className="px-5 py-3">
-                      <div className="text-sm text-white">{exp.patientName}</div>
+                      <div className="text-sm text-slate-800">{exp.patientName}</div>
                       <div className="text-xs text-slate-500">ДР: {exp.patientBirthDate}</div>
                     </td>
-                    <td className="px-5 py-3 text-sm text-slate-300">{nom?.name}</td>
-                    <td className="px-5 py-3 text-right text-sm text-white">{exp.quantity} {nom?.unit}</td>
+                    <td className="px-5 py-3 text-sm text-slate-700">{nom?.name}</td>
+                    <td className="px-5 py-3 text-right text-sm text-slate-800">{exp.quantity} {nom?.unit}</td>
                   </tr>
                 );
               })}
@@ -860,16 +860,16 @@ function OperationsPage({ data }: { data: ReturnType<typeof useData> }) {
       )}
 
       {subTab === 'returns' && (
-        <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+        <div className="bg-white rounded-xl border-b-4 border-blue-400 overflow-hidden shadow-sm">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-700 text-left">
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Дата</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Сотрудник</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Препарат</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Кол-во</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Причина</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-center">Статус</th>
+              <tr className="border-b-4 border-blue-400 text-left bg-blue-50">
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Дата</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Сотрудник</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Препарат</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Кол-во</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Причина</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-center">Статус</th>
               </tr>
             </thead>
             <tbody>
@@ -877,17 +877,17 @@ function OperationsPage({ data }: { data: ReturnType<typeof useData> }) {
                 const emp = employees.find(e => e.id === ret.employeeId);
                 const nom = nomenclature.find(n => n.id === ret.nomenclatureId);
                 return (
-                  <tr key={ret.id} className="border-b border-slate-700/50 hover:bg-slate-700/20">
-                    <td className="px-5 py-3 text-sm text-slate-300">{ret.date}</td>
-                    <td className="px-5 py-3 text-sm text-white">{emp?.fullName}</td>
-                    <td className="px-5 py-3 text-sm text-slate-300">{nom?.name}</td>
-                    <td className="px-5 py-3 text-right text-sm text-white">{ret.quantity} {nom?.unit}</td>
-                    <td className="px-5 py-3 text-sm text-slate-400">{ret.reason}</td>
+                  <tr key={ret.id} className="border-b-2 border-blue-200 hover:bg-blue-50/50">
+                    <td className="px-5 py-3 text-sm text-slate-700">{ret.date}</td>
+                    <td className="px-5 py-3 text-sm text-slate-800">{emp?.fullName}</td>
+                    <td className="px-5 py-3 text-sm text-slate-700">{nom?.name}</td>
+                    <td className="px-5 py-3 text-right text-sm text-slate-800">{ret.quantity} {nom?.unit}</td>
+                    <td className="px-5 py-3 text-sm text-slate-600">{ret.reason}</td>
                     <td className="px-5 py-3 text-center">
                       <span className={`px-2 py-1 rounded-full text-xs ${
-                        ret.status === 'Новый' ? 'bg-yellow-500/20 text-yellow-400' :
-                        ret.status === 'Принят' ? 'bg-emerald-500/20 text-emerald-400' :
-                        ret.status === 'Скорректирован' ? 'bg-blue-500/20 text-blue-400' : 'bg-red-500/20 text-red-400'
+                        ret.status === 'Новый' ? 'bg-yellow-100 text-yellow-700' :
+                        ret.status === 'Принят' ? 'bg-emerald-100 text-emerald-700' :
+                        ret.status === 'Скорректирован' ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'
                       }`}>{ret.status}</span>
                     </td>
                   </tr>
@@ -910,39 +910,39 @@ function OperationsPage({ data }: { data: ReturnType<typeof useData> }) {
 function AddArrivalModal({ employees, currentMonth, onClose, onAdd }: { employees: gs.Employee[]; currentMonth: string; onClose: () => void; onAdd: (form: any) => void }) {
   const [form, setForm] = useState({ employeeId: employees[0]?.id || '', amount: 0, shifts: 0, type: 'Плановый' as 'Плановый' | 'Дополнительный', comment: '' });
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-slate-800 rounded-2xl border border-slate-700 w-full max-w-md">
-        <div className="p-6 border-b border-slate-700">
-          <h3 className="text-lg font-bold text-white">Внести приход</h3>
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl border-b-4 border-blue-400 w-full max-w-md shadow-xl">
+        <div className="p-6 border-b-4 border-blue-400">
+          <h3 className="text-lg font-bold text-slate-800">Внести приход</h3>
         </div>
         <div className="p-6 space-y-4">
           <div>
-            <label className="text-sm text-slate-400 mb-1 block">Сотрудник</label>
+            <label className="text-sm text-slate-700 mb-1 block">Сотрудник</label>
             <select value={form.employeeId} onChange={e => setForm({ ...form, employeeId: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500">
+              className="w-full px-3 py-2 bg-white border-b-4 border-blue-400 rounded-lg text-slate-800 focus:outline-none">
               {employees.map(emp => <option key={emp.id} value={emp.id}>{emp.fullName}</option>)}
             </select>
           </div>
           <div>
-            <label className="text-sm text-slate-400 mb-1 block">Сумма (₽)</label>
+            <label className="text-sm text-slate-700 mb-1 block">Сумма (₽)</label>
             <input type="number" value={form.amount || ''} onChange={e => setForm({ ...form, amount: parseFloat(e.target.value) || 0 })}
-              className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500" />
+              className="w-full px-3 py-2 bg-white border-b-4 border-blue-400 rounded-lg text-slate-800 focus:outline-none" />
           </div>
           <div>
-            <label className="text-sm text-slate-400 mb-1 block">Смены</label>
+            <label className="text-sm text-slate-700 mb-1 block">Смены</label>
             <input type="number" value={form.shifts || ''} onChange={e => setForm({ ...form, shifts: parseInt(e.target.value) || 0 })}
-              className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500" />
+              className="w-full px-3 py-2 bg-white border-b-4 border-blue-400 rounded-lg text-slate-800 focus:outline-none" />
           </div>
           <div>
-            <label className="text-sm text-slate-400 mb-1 block">Комментарий</label>
+            <label className="text-sm text-slate-700 mb-1 block">Комментарий</label>
             <input type="text" value={form.comment} onChange={e => setForm({ ...form, comment: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500" />
+              className="w-full px-3 py-2 bg-white border-b-4 border-blue-400 rounded-lg text-slate-800 focus:outline-none" />
           </div>
         </div>
-        <div className="p-6 border-t border-slate-700 flex justify-end gap-3">
-          <button onClick={onClose} className="px-4 py-2 rounded-lg text-slate-400 hover:text-white">Отмена</button>
+        <div className="p-6 border-t-4 border-blue-400 flex justify-end gap-3">
+          <button onClick={onClose} className="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100">Отмена</button>
           <button onClick={() => onAdd(form)} disabled={form.amount <= 0}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 rounded-lg text-white font-medium">Внести</button>
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-300 rounded-lg text-white font-medium">Внести</button>
         </div>
       </div>
     </div>
@@ -979,51 +979,51 @@ function StockPage({ data }: { data: ReturnType<typeof useData> }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-white">Остатки</h2>
-        <p className="text-slate-400 text-sm mt-1">Период: {currentMonth}</p>
+        <h2 className="text-2xl font-bold text-slate-800">Остатки</h2>
+        <p className="text-slate-600 text-sm mt-1">Период: {currentMonth}</p>
       </div>
 
-      <div className="bg-gradient-to-br from-purple-600/20 to-blue-600/10 rounded-2xl p-6 border border-purple-500/30">
+      <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border-b-4 border-blue-400 shadow-sm">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-black/20 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-purple-300">{totalValue.toLocaleString('ru-RU')} ₽</div>
-            <div className="text-xs text-slate-400 mt-1">Общая стоимость</div>
+          <div className="bg-white rounded-xl p-4 text-center border-b-4 border-blue-400">
+            <div className="text-2xl font-bold text-purple-600">{totalValue.toLocaleString('ru-RU')} ₽</div>
+            <div className="text-xs text-slate-600 mt-1">Общая стоимость</div>
           </div>
-          <div className="bg-black/20 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-blue-300">{totalItems}</div>
-            <div className="text-xs text-slate-400 mt-1">Единиц</div>
+          <div className="bg-white rounded-xl p-4 text-center border-b-4 border-blue-400">
+            <div className="text-2xl font-bold text-blue-600">{totalItems}</div>
+            <div className="text-xs text-slate-600 mt-1">Единиц</div>
           </div>
-          <div className="bg-black/20 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-emerald-300">{activeEmployees.length}</div>
-            <div className="text-xs text-slate-400 mt-1">Сотрудников</div>
+          <div className="bg-white rounded-xl p-4 text-center border-b-4 border-blue-400">
+            <div className="text-2xl font-bold text-emerald-600">{activeEmployees.length}</div>
+            <div className="text-xs text-slate-600 mt-1">Сотрудников</div>
           </div>
-          <div className="bg-black/20 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-yellow-300">{stockByNomenclature().length}</div>
-            <div className="text-xs text-slate-400 mt-1">Позиций</div>
+          <div className="bg-white rounded-xl p-4 text-center border-b-4 border-blue-400">
+            <div className="text-2xl font-bold text-yellow-600">{stockByNomenclature().length}</div>
+            <div className="text-xs text-slate-600 mt-1">Позиций</div>
           </div>
         </div>
       </div>
 
-      <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-        <div className="p-5 border-b border-slate-700">
-          <h3 className="text-lg font-bold text-white">Остатки по номенклатуре</h3>
+      <div className="bg-white rounded-xl border-b-4 border-blue-400 overflow-hidden shadow-sm">
+        <div className="p-5 border-b-4 border-blue-400">
+          <h3 className="text-lg font-bold text-slate-800">Остатки по номенклатуре</h3>
         </div>
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-700 text-left">
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Препарат</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Кол-во</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Цена/ед.</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Стоимость</th>
+            <tr className="border-b-4 border-blue-400 text-left bg-blue-50">
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Препарат</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Кол-во</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Цена/ед.</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Стоимость</th>
             </tr>
           </thead>
           <tbody>
             {stockByNomenclature().sort((a, b) => b.value - a.value).map(item => (
-              <tr key={item.id} className="border-b border-slate-700/50 hover:bg-slate-700/20">
-                <td className="px-5 py-3 text-sm text-white">{item.name}</td>
-                <td className="px-5 py-3 text-right text-sm text-white">{item.qty} {item.unit}</td>
-                <td className="px-5 py-3 text-right text-sm text-slate-300">{item.price.toLocaleString('ru-RU')} ₽</td>
-                <td className="px-5 py-3 text-right text-sm font-semibold text-emerald-400">{item.value.toLocaleString('ru-RU')} ₽</td>
+              <tr key={item.id} className="border-b-2 border-blue-200 hover:bg-blue-50/50">
+                <td className="px-5 py-3 text-sm text-slate-800">{item.name}</td>
+                <td className="px-5 py-3 text-right text-sm text-slate-800">{item.qty} {item.unit}</td>
+                <td className="px-5 py-3 text-right text-sm text-slate-700">{item.price.toLocaleString('ru-RU')} ₽</td>
+                <td className="px-5 py-3 text-right text-sm font-semibold text-emerald-600">{item.value.toLocaleString('ru-RU')} ₽</td>
               </tr>
             ))}
           </tbody>
@@ -1066,25 +1066,25 @@ function ChatPage({ data }: { data: ReturnType<typeof useData> }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-white">Сообщения</h2>
-        <p className="text-slate-400 text-sm mt-1">Чат с сотрудниками</p>
+        <h2 className="text-2xl font-bold text-slate-800">Сообщения</h2>
+        <p className="text-slate-600 text-sm mt-1">Чат с сотрудниками</p>
       </div>
 
-      <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden flex h-[600px]">
-        <div className="w-80 border-r border-slate-700 flex flex-col">
-          <div className="p-4 border-b border-slate-700">
-            <h3 className="font-bold text-white text-sm">Диалоги</h3>
+      <div className="bg-white rounded-xl border-b-4 border-blue-400 overflow-hidden flex h-[600px] shadow-sm">
+        <div className="w-80 border-r-4 border-blue-400 flex flex-col">
+          <div className="p-4 border-b-4 border-blue-400 bg-blue-50">
+            <h3 className="font-bold text-slate-800 text-sm">Диалоги</h3>
           </div>
           <div className="flex-1 overflow-y-auto">
             {employees.filter(e => e.status === 'Активен').map(emp => (
               <button key={emp.id} onClick={() => setSelectedChat(emp.id)}
-                className={`w-full p-4 flex items-center gap-3 text-left border-b border-slate-700/50 ${
-                  selectedChat === emp.id ? 'bg-blue-600/10 border-l-2 border-l-blue-400' : 'hover:bg-slate-700/30'
+                className={`w-full p-4 flex items-center gap-3 text-left border-b-2 border-blue-200 ${
+                  selectedChat === emp.id ? 'bg-blue-50 border-l-4 border-l-blue-500' : 'hover:bg-blue-50/50'
                 }`}>
-                <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-sm font-bold">{emp.fullName[0]}</div>
+                <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-sm font-bold text-white">{emp.fullName[0]}</div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-white truncate">{emp.fullName}</div>
-                  <div className="text-xs text-slate-400">{emp.position}</div>
+                  <div className="text-sm font-medium text-slate-800 truncate">{emp.fullName}</div>
+                  <div className="text-xs text-slate-600">{emp.position}</div>
                 </div>
               </button>
             ))}
@@ -1092,13 +1092,13 @@ function ChatPage({ data }: { data: ReturnType<typeof useData> }) {
         </div>
 
         <div className="flex-1 flex flex-col">
-          <div className="p-4 border-b border-slate-700 flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-sm font-bold">
+          <div className="p-4 border-b-4 border-blue-400 flex items-center gap-3">
+            <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-sm font-bold text-white">
               {employees.find(e => e.id === selectedChat)?.fullName[0] || '?'}
             </div>
             <div>
-              <div className="font-medium text-white">{employees.find(e => e.id === selectedChat)?.fullName}</div>
-              <div className="text-xs text-slate-400">{employees.find(e => e.id === selectedChat)?.position}</div>
+              <div className="font-medium text-slate-800">{employees.find(e => e.id === selectedChat)?.fullName}</div>
+              <div className="text-xs text-slate-600">{employees.find(e => e.id === selectedChat)?.position}</div>
             </div>
           </div>
 
@@ -1111,23 +1111,23 @@ function ChatPage({ data }: { data: ReturnType<typeof useData> }) {
             ) : chatWith.map(msg => (
               <div key={msg.id} className={`flex ${msg.fromId === 'MGR' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[70%] rounded-2xl px-4 py-2.5 ${
-                  msg.fromId === 'MGR' ? 'bg-blue-600 text-white rounded-br-md' : 'bg-slate-700 text-white rounded-bl-md'
+                  msg.fromId === 'MGR' ? 'bg-blue-500 text-white rounded-br-md' : 'bg-slate-100 text-slate-800 rounded-bl-md'
                 }`}>
                   <p className="text-sm">{msg.text}</p>
-                  <div className={`text-xs mt-1 ${msg.fromId === 'MGR' ? 'text-blue-200' : 'text-slate-400'}`}>{msg.date}</div>
+                  <div className={`text-xs mt-1 ${msg.fromId === 'MGR' ? 'text-blue-100' : 'text-slate-500'}`}>{msg.date}</div>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="p-4 border-t border-slate-700">
+          <div className="p-4 border-t-4 border-blue-400">
             <div className="flex gap-2">
               <input type="text" value={newMessage} onChange={e => setNewMessage(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && sendMessage()}
                 placeholder="Введите сообщение..."
-                className="flex-1 px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500" />
+                className="flex-1 px-4 py-2.5 bg-white border-b-4 border-blue-400 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none" />
               <button onClick={sendMessage} disabled={!newMessage.trim()}
-                className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 rounded-xl text-white font-medium">➤</button>
+                className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-300 rounded-xl text-white font-medium">➤</button>
             </div>
           </div>
         </div>
@@ -1175,73 +1175,73 @@ function ReportsPage({ data }: { data: ReturnType<typeof useData> }) {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white">Отчёты</h2>
-          <p className="text-slate-400 text-sm mt-1">Ежемесячные отчёты</p>
+          <h2 className="text-2xl font-bold text-slate-800">Отчёты</h2>
+          <p className="text-slate-600 text-sm mt-1">Ежемесячные отчёты</p>
         </div>
-        <button onClick={exportCSV} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white text-sm font-medium">
+        <button onClick={exportCSV} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white text-sm font-medium shadow-sm">
           📊 Экспорт CSV
         </button>
       </div>
 
       <input type="month" value={selectedMonth} onChange={e => setSelectedMonth(e.target.value)}
-        className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-blue-500" />
+        className="px-4 py-2 bg-white border-b-4 border-blue-400 rounded-lg text-slate-800 focus:outline-none shadow-sm" />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
-          <div className="text-xs text-slate-400">Приход</div>
-          <div className="text-xl font-bold text-emerald-400 mt-1">{totals.arrival.toLocaleString('ru-RU')} ₽</div>
+        <div className="bg-white rounded-xl p-4 border-b-4 border-blue-400 shadow-sm">
+          <div className="text-xs text-slate-600">Приход</div>
+          <div className="text-xl font-bold text-emerald-600 mt-1">{totals.arrival.toLocaleString('ru-RU')} ₽</div>
         </div>
-        <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
-          <div className="text-xs text-slate-400">Расход</div>
-          <div className="text-xl font-bold text-blue-400 mt-1">{totals.expense.toLocaleString('ru-RU')} ₽</div>
+        <div className="bg-white rounded-xl p-4 border-b-4 border-blue-400 shadow-sm">
+          <div className="text-xs text-slate-600">Расход</div>
+          <div className="text-xl font-bold text-blue-600 mt-1">{totals.expense.toLocaleString('ru-RU')} ₽</div>
         </div>
-        <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
-          <div className="text-xs text-slate-400">Остаток</div>
-          <div className="text-xl font-bold text-purple-400 mt-1">{totals.balance.toLocaleString('ru-RU')} ₽</div>
+        <div className="bg-white rounded-xl p-4 border-b-4 border-blue-400 shadow-sm">
+          <div className="text-xs text-slate-600">Остаток</div>
+          <div className="text-xl font-bold text-purple-600 mt-1">{totals.balance.toLocaleString('ru-RU')} ₽</div>
         </div>
-        <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
-          <div className="text-xs text-slate-400">Вызовов</div>
-          <div className="text-xl font-bold text-white mt-1">{totals.calls}</div>
+        <div className="bg-white rounded-xl p-4 border-b-4 border-blue-400 shadow-sm">
+          <div className="text-xs text-slate-600">Вызовов</div>
+          <div className="text-xl font-bold text-slate-800 mt-1">{totals.calls}</div>
         </div>
       </div>
 
-      <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-        <div className="p-5 border-b border-slate-700">
-          <h3 className="text-lg font-bold text-white">📋 Отчёт за {selectedMonth}</h3>
+      <div className="bg-white rounded-xl border-b-4 border-blue-400 overflow-hidden shadow-sm">
+        <div className="p-5 border-b-4 border-blue-400">
+          <h3 className="text-lg font-bold text-slate-800">📋 Отчёт за {selectedMonth}</h3>
         </div>
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-700 text-left">
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">№</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">ФИО</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Вызовы</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Приход</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Расход</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase text-right">Остаток</th>
+            <tr className="border-b-4 border-blue-400 text-left bg-blue-50">
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">№</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">ФИО</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Вызовы</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Приход</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Расход</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase text-right">Остаток</th>
             </tr>
           </thead>
           <tbody>
             {reportData.map((row, i) => (
-              <tr key={row.emp.id} className="border-b border-slate-700/50 hover:bg-slate-700/20">
-                <td className="px-5 py-3 text-sm text-slate-500">{i + 1}</td>
+              <tr key={row.emp.id} className="border-b-2 border-blue-200 hover:bg-blue-50/50">
+                <td className="px-5 py-3 text-sm text-slate-600">{i + 1}</td>
                 <td className="px-5 py-3">
-                  <div className="text-sm font-medium text-white">{row.emp.fullName}</div>
-                  <div className="text-xs text-slate-400">{row.emp.position}</div>
+                  <div className="text-sm font-medium text-slate-800">{row.emp.fullName}</div>
+                  <div className="text-xs text-slate-600">{row.emp.position}</div>
                 </td>
-                <td className="px-5 py-3 text-right text-sm text-white">{row.calls}</td>
-                <td className="px-5 py-3 text-right text-sm text-emerald-400">{row.arrival.toLocaleString('ru-RU')} ₽</td>
-                <td className="px-5 py-3 text-right text-sm text-blue-400">{row.expense.toLocaleString('ru-RU')} ₽</td>
-                <td className={`px-5 py-3 text-right text-sm font-semibold ${row.balance >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                <td className="px-5 py-3 text-right text-sm text-slate-800">{row.calls}</td>
+                <td className="px-5 py-3 text-right text-sm text-emerald-600">{row.arrival.toLocaleString('ru-RU')} ₽</td>
+                <td className="px-5 py-3 text-right text-sm text-blue-600">{row.expense.toLocaleString('ru-RU')} ₽</td>
+                <td className={`px-5 py-3 text-right text-sm font-semibold ${row.balance >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
                   {row.balance.toLocaleString('ru-RU')} ₽
                 </td>
               </tr>
             ))}
-            <tr className="bg-slate-900/50 font-bold">
-              <td className="px-5 py-3" colSpan={2}><span className="text-sm text-white">ИТОГО</span></td>
-              <td className="px-5 py-3 text-right text-sm text-white">{totals.calls}</td>
-              <td className="px-5 py-3 text-right text-sm text-emerald-400">{totals.arrival.toLocaleString('ru-RU')} ₽</td>
-              <td className="px-5 py-3 text-right text-sm text-blue-400">{totals.expense.toLocaleString('ru-RU')} ₽</td>
-              <td className={`px-5 py-3 text-right text-sm ${totals.balance >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+            <tr className="bg-blue-50 font-bold">
+              <td className="px-5 py-3" colSpan={2}><span className="text-sm text-slate-800">ИТОГО</span></td>
+              <td className="px-5 py-3 text-right text-sm text-slate-800">{totals.calls}</td>
+              <td className="px-5 py-3 text-right text-sm text-emerald-600">{totals.arrival.toLocaleString('ru-RU')} ₽</td>
+              <td className="px-5 py-3 text-right text-sm text-blue-600">{totals.expense.toLocaleString('ru-RU')} ₽</td>
+              <td className={`px-5 py-3 text-right text-sm ${totals.balance >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
                 {totals.balance.toLocaleString('ru-RU')} ₽
               </td>
             </tr>
@@ -1265,44 +1265,44 @@ function AuditPage({ data }: { data: ReturnType<typeof useData> }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-white">Журнал изменений</h2>
-        <p className="text-slate-400 text-sm mt-1">История всех действий • Всего записей: {auditLog.length}</p>
+        <h2 className="text-2xl font-bold text-slate-800">Журнал изменений</h2>
+        <p className="text-slate-600 text-sm mt-1">История всех действий • Всего записей: {auditLog.length}</p>
       </div>
 
       <input type="text" placeholder="Поиск..." value={search} onChange={e => setSearch(e.target.value)}
-        className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500" />
+        className="w-full px-4 py-2 bg-white border-b-4 border-blue-400 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none shadow-sm" />
 
-      <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+      <div className="bg-white rounded-xl border-b-4 border-blue-400 overflow-hidden shadow-sm">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-700 text-left">
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Дата</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Пользователь</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Лист</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Действие</th>
-              <th className="px-5 py-3 text-xs font-medium text-slate-400 uppercase">Было → Стало</th>
+            <tr className="border-b-4 border-blue-400 text-left bg-blue-50">
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Дата</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Пользователь</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Лист</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Действие</th>
+              <th className="px-5 py-3 text-xs font-medium text-slate-700 uppercase">Было → Стало</th>
             </tr>
           </thead>
           <tbody>
             {filtered.map(log => (
-              <tr key={log.id} className="border-b border-slate-700/50 hover:bg-slate-700/20">
-                <td className="px-5 py-3 text-sm text-slate-300 whitespace-nowrap">{log.date}</td>
+              <tr key={log.id} className="border-b-2 border-blue-200 hover:bg-blue-50/50">
+                <td className="px-5 py-3 text-sm text-slate-700 whitespace-nowrap">{log.date}</td>
                 <td className="px-5 py-3">
-                  <div className="text-sm text-white">{log.userName}</div>
-                  <div className="text-xs text-slate-500">{log.role}</div>
+                  <div className="text-sm text-slate-800">{log.userName}</div>
+                  <div className="text-xs text-slate-600">{log.role}</div>
                 </td>
-                <td className="px-5 py-3"><span className="px-2 py-1 rounded bg-slate-700 text-xs text-slate-300">{log.sheet}</span></td>
+                <td className="px-5 py-3"><span className="px-2 py-1 rounded bg-blue-100 text-xs text-blue-700">{log.sheet}</span></td>
                 <td className="px-5 py-3">
                   <span className={`px-2 py-1 rounded-full text-xs ${
-                    log.action === 'Создание' ? 'bg-emerald-500/20 text-emerald-400' :
-                    log.action === 'Изменение' ? 'bg-blue-500/20 text-blue-400' : 'bg-red-500/20 text-red-400'
+                    log.action === 'Создание' ? 'bg-emerald-100 text-emerald-700' :
+                    log.action === 'Изменение' ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'
                   }`}>{log.action}</span>
                 </td>
                 <td className="px-5 py-3 text-sm">
                   <div className="flex items-center gap-1">
-                    {log.oldValue && <span className="text-red-400 line-through text-xs">{log.oldValue}</span>}
+                    {log.oldValue && <span className="text-red-600 line-through text-xs">{log.oldValue}</span>}
                     {log.oldValue && log.newValue && <span className="text-slate-500">→</span>}
-                    {log.newValue && <span className="text-emerald-400 text-xs">{log.newValue}</span>}
+                    {log.newValue && <span className="text-emerald-600 text-xs">{log.newValue}</span>}
                   </div>
                 </td>
               </tr>
@@ -1335,87 +1335,87 @@ function SettingsPage({ data }: { data: ReturnType<typeof useData> }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-white">Настройки</h2>
-        <p className="text-slate-400 text-sm mt-1">Информация о системе и подключении</p>
+        <h2 className="text-2xl font-bold text-slate-800">Настройки</h2>
+        <p className="text-slate-600 text-sm mt-1">Информация о системе и подключении</p>
       </div>
 
-      <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-        <div className="p-5 border-b border-slate-700 flex items-center justify-between">
-          <h3 className="text-lg font-bold text-white">📊 Подключение к Google Sheets</h3>
+      <div className="bg-white rounded-xl border-b-4 border-blue-400 overflow-hidden shadow-sm">
+        <div className="p-5 border-b-4 border-blue-400 flex items-center justify-between">
+          <h3 className="text-lg font-bold text-slate-800">📊 Подключение к Google Sheets</h3>
           <button
             onClick={handleDisconnect}
-            className="px-3 py-1.5 bg-red-600/20 text-red-400 rounded-lg text-sm hover:bg-red-600/30 transition-colors"
+            className="px-3 py-1.5 bg-red-100 text-red-600 rounded-lg text-sm hover:bg-red-200 transition-colors"
           >
             Отключить
           </button>
         </div>
         <div className="p-5 space-y-3">
           <div className="flex items-center gap-3">
-            <span className="w-3 h-3 bg-emerald-400 rounded-full"></span>
-            <span className="text-sm text-white">Статус: Подключено</span>
+            <span className="w-3 h-3 bg-emerald-500 rounded-full"></span>
+            <span className="text-sm text-slate-800">Статус: Подключено</span>
           </div>
-          <div className="bg-slate-900 rounded-lg p-3">
-            <div className="text-xs text-slate-400">URL веб-приложения</div>
-            <div className="text-sm text-white font-mono break-all">{config.scriptUrl.substring(0, 50)}...</div>
+          <div className="bg-blue-50 rounded-lg p-3 border-l-4 border-blue-400">
+            <div className="text-xs text-slate-600">URL веб-приложения</div>
+            <div className="text-sm text-slate-800 font-mono break-all">{config.scriptUrl.substring(0, 50)}...</div>
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-600">
             Подключение через Google Apps Script Web App
           </p>
         </div>
       </div>
 
-      <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-        <div className="p-5 border-b border-slate-700">
-          <h3 className="text-lg font-bold text-white">📈 Статистика данных</h3>
+      <div className="bg-white rounded-xl border-b-4 border-blue-400 overflow-hidden shadow-sm">
+        <div className="p-5 border-b-4 border-blue-400">
+          <h3 className="text-lg font-bold text-slate-800">📈 Статистика данных</h3>
         </div>
         <div className="p-5 grid grid-cols-2 md:grid-cols-3 gap-4">
-          <div className="bg-slate-900 rounded-lg p-3">
-            <div className="text-2xl font-bold text-white">{employees.length}</div>
-            <div className="text-xs text-slate-400">Сотрудников</div>
+          <div className="bg-blue-50 rounded-lg p-3 border-b-4 border-blue-400">
+            <div className="text-2xl font-bold text-slate-800">{employees.length}</div>
+            <div className="text-xs text-slate-600">Сотрудников</div>
           </div>
-          <div className="bg-slate-900 rounded-lg p-3">
-            <div className="text-2xl font-bold text-white">{nomenclature.length}</div>
-            <div className="text-xs text-slate-400">Позиций номенклатуры</div>
+          <div className="bg-blue-50 rounded-lg p-3 border-b-4 border-blue-400">
+            <div className="text-2xl font-bold text-slate-800">{nomenclature.length}</div>
+            <div className="text-xs text-slate-600">Позиций номенклатуры</div>
           </div>
-          <div className="bg-slate-900 rounded-lg p-3">
-            <div className="text-2xl font-bold text-white">{arrivals.length}</div>
-            <div className="text-xs text-slate-400">Записей прихода</div>
+          <div className="bg-blue-50 rounded-lg p-3 border-b-4 border-blue-400">
+            <div className="text-2xl font-bold text-slate-800">{arrivals.length}</div>
+            <div className="text-xs text-slate-600">Записей прихода</div>
           </div>
-          <div className="bg-slate-900 rounded-lg p-3">
-            <div className="text-2xl font-bold text-white">{expenses.length}</div>
-            <div className="text-xs text-slate-400">Записей расхода</div>
+          <div className="bg-blue-50 rounded-lg p-3 border-b-4 border-blue-400">
+            <div className="text-2xl font-bold text-slate-800">{expenses.length}</div>
+            <div className="text-xs text-slate-600">Записей расхода</div>
           </div>
-          <div className="bg-slate-900 rounded-lg p-3">
-            <div className="text-2xl font-bold text-white">{returns.length}</div>
-            <div className="text-xs text-slate-400">Возвратов</div>
+          <div className="bg-blue-50 rounded-lg p-3 border-b-4 border-blue-400">
+            <div className="text-2xl font-bold text-slate-800">{returns.length}</div>
+            <div className="text-xs text-slate-600">Возвратов</div>
           </div>
-          <div className="bg-slate-900 rounded-lg p-3">
-            <div className="text-2xl font-bold text-white">{chatMessages.length}</div>
-            <div className="text-xs text-slate-400">Сообщений</div>
+          <div className="bg-blue-50 rounded-lg p-3 border-b-4 border-blue-400">
+            <div className="text-2xl font-bold text-slate-800">{chatMessages.length}</div>
+            <div className="text-xs text-slate-600">Сообщений</div>
           </div>
-          <div className="bg-slate-900 rounded-lg p-3">
-            <div className="text-2xl font-bold text-white">{auditLog.length}</div>
-            <div className="text-xs text-slate-400">Записей журнала</div>
+          <div className="bg-blue-50 rounded-lg p-3 border-b-4 border-blue-400">
+            <div className="text-2xl font-bold text-slate-800">{auditLog.length}</div>
+            <div className="text-xs text-slate-600">Записей журнала</div>
           </div>
         </div>
       </div>
 
-      <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-        <div className="p-5 border-b border-slate-700">
-          <h3 className="text-lg font-bold text-white">ℹ️ О системе</h3>
+      <div className="bg-white rounded-xl border-b-4 border-blue-400 overflow-hidden shadow-sm">
+        <div className="p-5 border-b-4 border-blue-400">
+          <h3 className="text-lg font-bold text-slate-800">ℹ️ О системе</h3>
         </div>
         <div className="p-5 space-y-2">
-          <div className="flex justify-between py-2 border-b border-slate-700/50">
-            <span className="text-sm text-slate-400">Версия</span>
-            <span className="text-sm text-white">2.0.0 (Google Sheets)</span>
+          <div className="flex justify-between py-2 border-b-2 border-blue-200">
+            <span className="text-sm text-slate-600">Версия</span>
+            <span className="text-sm text-slate-800">3.0.0 (Apps Script Web App)</span>
           </div>
-          <div className="flex justify-between py-2 border-b border-slate-700/50">
-            <span className="text-sm text-slate-400">Хранилище</span>
-            <span className="text-sm text-white">Google Sheets API v4</span>
+          <div className="flex justify-between py-2 border-b-2 border-blue-200">
+            <span className="text-sm text-slate-600">Хранилище</span>
+            <span className="text-sm text-slate-800">Google Sheets</span>
           </div>
           <div className="flex justify-between py-2">
-            <span className="text-sm text-slate-400">Дата</span>
-            <span className="text-sm text-white">{new Date().toLocaleDateString('ru-RU')}</span>
+            <span className="text-sm text-slate-600">Дата</span>
+            <span className="text-sm text-slate-800">{new Date().toLocaleDateString('ru-RU')}</span>
           </div>
         </div>
       </div>
