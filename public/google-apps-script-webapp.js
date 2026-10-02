@@ -135,7 +135,13 @@ function readSheetData(sheetName) {
   });
 }
 
-function getEmployeesData() { return readSheetData('Сотрудники'); }
+function getEmployeesData() {
+  const data = readSheetData('Сотрудники');
+  return data.map(row => ({
+    ...row,
+    'Пароль': row['Пароль (хэш)'] || ''
+  }));
+}
 function getNomenclatureData() { return readSheetData('Номенклатура'); }
 function getPricesData() { return readSheetData('Цены'); }
 function getArrivalsData() { return readSheetData('Приход'); }
@@ -155,7 +161,7 @@ function addEmployeeRow(data) {
     data.id || '',
     data.personalNumber || '',
     data.fullName || '',
-    data.passwordHash || '',
+    data.password || data.passwordHash || '',
     data.status || 'Активен',
     data.position || '',
     data.hireDate || new Date(),

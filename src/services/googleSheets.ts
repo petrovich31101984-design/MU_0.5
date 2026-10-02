@@ -135,6 +135,7 @@ export interface Employee {
   id: string;
   personalNumber: string;
   fullName: string;
+  password: string;
   status: string;
   position: string;
   hireDate: string;
@@ -227,6 +228,7 @@ export async function getEmployees(): Promise<Employee[]> {
     id: row['ID'] || '',
     personalNumber: row['Персональный номер'] || '',
     fullName: row['ФИО'] || '',
+    password: row['Пароль'] || '',
     status: row['Статус'] || 'Активен',
     position: row['Должность'] || '',
     hireDate: row['Дата найма'] || '',
