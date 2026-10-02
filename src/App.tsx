@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import * as gs from './services/googleSheets';
 
+// Проверка подключения
+const isConfigured = gs.isConnected();
+
 // ============ КОНТЕКСТ ДАННЫХ ============
 function useData() {
   const [employees, setEmployees] = useState<gs.Employee[]>([]);
@@ -53,11 +56,133 @@ function useData() {
 // ============ ТИПЫ ============
 type Page = 'dashboard' | 'employees' | 'nomenclature' | 'operations' | 'stock' | 'chat' | 'reports' | 'audit' | 'settings';
 
+// ============ СТРАНИЦА НАСТРОЙКИ ПОДКЛЮЧЕНИЯ ============
+function SetupPage() {
+  const [apiKey, setApiKey] = useState('');
+  const [spreadsheetId, setSpreadsheetId] = useState('');
+  const [testing, setTesting] = useState(false);
+  const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+
+  const handleConnect = async () => {
+    setTesting(true);
+    setResult(null);
+    
+    gs.saveConfig(apiKey, spreadsheetId);
+    const testResult = await gs.testConnection();
+    
+    if (testResult.success) {
+      setResult({ success: true, message: `✓ Подключено! Таблица: ${testResult.title}` });
+      setTimeout(() => window.location.reload(), 1500);
+    } else {
+      setResult({ success: false, message: `✗ Ошибка: ${testResult.error}` });
+    }
+    
+    setTesting(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+      <div className="max-w-2xl w-full">
+        <div className="text-center mb-8">
+          <div className="text-6xl mb-4">🔌</div>
+          <h1 className="text-3xl font-bold text-white mb-2">Подключение к Google Sheets</h1>
+          <p className="text-slate-400">Настройте подключение для работы с базой данных</p>
+        </div>
+
+        <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700 space-y-6">
+          {/* Шаг 1 */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+              <span className="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-sm">1</span>
+              Получите API ключ
+            </h3>
+            <div className="bg-slate-900 rounded-lg p-4 text-sm text-slate-300 space-y-2">
+              <p>1. Перейдите в <a href="https://console.cloud.google.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">Google Cloud Console</a></p>
+              <p>2. Создайте проект или выберите существующий</p>
+              <p>3. Включите <strong>Google Sheets API</strong></p>
+              <p>4. Создайте API ключ: Credentials → Create Credentials → API Key</p>
+            </div>
+          </div>
+
+          {/* Шаг 2 */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+              <span className="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-sm">2</span>
+              Создайте таблицу
+            </h3>
+            <div className="bg-slate-900 rounded-lg p-4 text-sm text-slate-300 space-y-2">
+              <p>1. Перейдите в <a href="https://sheets.google.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">Google Sheets</a></p>
+              <p>2. Создайте новую таблицу</p>
+              <p>3. Выполните скрипт установки (расширения → Apps Script → вставьте код из <code className="bg-slate-800 px-2 py-0.5 rounded">public/google-apps-script.js</code>)</p>
+              <p>4. Скопируйте ID таблицы из URL: <code className="bg-slate-800 px-2 py-0.5 rounded">docs.google.com/spreadsheets/d/<strong>ID</strong>/edit</code></p>
+            </div>
+          </div>
+
+          {/* Шаг 3 */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+              <span className="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-sm">3</span>
+              Настройте доступ
+            </h3>
+            <div className="bg-slate-900 rounded-lg p-4 text-sm text-slate-300">
+              <p>Откройте таблицу → Поделиться → "Все, у кого есть ссылка" → Читатель</p>
+            </div>
+          </div>
+
+          {/* Форма подключения */}
+          <div className="border-t border-slate-700 pt-6 space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">API ключ</label>
+              <input
+                type="password"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="AIzaSy..."
+                className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">ID таблицы</label>
+              <input
+                type="text"
+                value={spreadsheetId}
+                onChange={(e) => setSpreadsheetId(e.target.value)}
+                placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"
+                className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            {result && (
+              <div className={`p-4 rounded-lg ${result.success ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400' : 'bg-red-500/10 border border-red-500/30 text-red-400'}`}>
+                {result.message}
+              </div>
+            )}
+
+            <button
+              onClick={handleConnect}
+              disabled={testing || !apiKey || !spreadsheetId}
+              className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 rounded-lg text-white font-medium transition-colors"
+            >
+              {testing ? 'Проверка подключения...' : 'Подключиться'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ============ ГЛАВНОЕ ПРИЛОЖЕНИЕ ============
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const data = useData();
+
+  // Если подключение не настроено, показываем страницу настройки
+  if (!isConfigured) {
+    return <SetupPage />;
+  }
 
   const menuItems: { id: Page; label: string; icon: string }[] = [
     { id: 'dashboard', label: 'Панель управления', icon: '📊' },
@@ -1154,6 +1279,14 @@ function AuditPage({ data }: { data: ReturnType<typeof useData> }) {
 // ============ НАСТРОЙКИ ============
 function SettingsPage({ data }: { data: ReturnType<typeof useData> }) {
   const { employees, nomenclature, arrivals, expenses, returns, chatMessages, auditLog } = data;
+  const config = gs.getCurrentConfig();
+
+  const handleDisconnect = () => {
+    if (confirm('Вы уверены? Приложение перестанет работать с Google Sheets.')) {
+      gs.clearConfig();
+      window.location.reload();
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -1163,8 +1296,14 @@ function SettingsPage({ data }: { data: ReturnType<typeof useData> }) {
       </div>
 
       <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-        <div className="p-5 border-b border-slate-700">
+        <div className="p-5 border-b border-slate-700 flex items-center justify-between">
           <h3 className="text-lg font-bold text-white">📊 Подключение к Google Sheets</h3>
+          <button
+            onClick={handleDisconnect}
+            className="px-3 py-1.5 bg-red-600/20 text-red-400 rounded-lg text-sm hover:bg-red-600/30 transition-colors"
+          >
+            Отключить
+          </button>
         </div>
         <div className="p-5 space-y-3">
           <div className="flex items-center gap-3">
@@ -1173,14 +1312,14 @@ function SettingsPage({ data }: { data: ReturnType<typeof useData> }) {
           </div>
           <div className="bg-slate-900 rounded-lg p-3">
             <div className="text-xs text-slate-400">API Key</div>
-            <div className="text-sm text-white font-mono">••••••••••••••••</div>
+            <div className="text-sm text-white font-mono">{config.apiKey.substring(0, 10)}...{config.apiKey.substring(config.apiKey.length - 4)}</div>
           </div>
           <div className="bg-slate-900 rounded-lg p-3">
             <div className="text-xs text-slate-400">Spreadsheet ID</div>
-            <div className="text-sm text-white font-mono">••••••••••••••••</div>
+            <div className="text-sm text-white font-mono">{config.spreadsheetId.substring(0, 20)}...</div>
           </div>
           <p className="text-xs text-slate-500">
-            Для изменения подключения отредактируйте файл src/services/googleSheets.ts
+            Данные сохраняются в localStorage браузера
           </p>
         </div>
       </div>

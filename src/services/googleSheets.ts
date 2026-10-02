@@ -1,30 +1,48 @@
 /**
  * Google Sheets API Service
- * 
- * ИНСТРУКЦИЯ ПО НАСТРОЙКЕ:
- * 
- * 1. Получите API ключ:
- *    - Перейдите в https://console.cloud.google.com
- *    - Создайте проект или выберите существующий
- *    - Включите Google Sheets API
- *    - Создайте API ключ (Credentials → API Key)
- * 
- * 2. Создайте Google таблицу:
- *    - Перейдите в https://sheets.google.com
- *    - Создайте новую таблицу
- *    - Выполните скрипт установки (public/google-apps-script.js)
- *    - Скопируйте ID таблицы из URL:
- *      https://docs.google.com/spreadsheets/d/ID_ТАБЛИЦЫ/edit
- * 
- * 3. Настройте доступ:
- *    - Откройте таблицу → Поделиться
- *    - "Все, у кого есть ссылка" → Читатель
- * 
- * 4. Вставьте значения ниже:
+ * Конфигурация хранится в localStorage
  */
 
-const API_KEY = 'YOUR_API_KEY_HERE'; // ← Вставьте ваш API ключ
-const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE'; // ← Вставьте ID таблицы
+interface Config {
+  apiKey: string;
+  spreadsheetId: string;
+}
+
+const CONFIG_KEY = 'googleSheetsConfig';
+
+// Получение конфигурации из localStorage
+function getConfig(): Config {
+  const saved = localStorage.getItem(CONFIG_KEY);
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return { apiKey: '', spreadsheetId: '' };
+    }
+  }
+  return { apiKey: '', spreadsheetId: '' };
+}
+
+// Сохранение конфигурации в localStorage
+export function saveConfig(apiKey: string, spreadsheetId: string): void {
+  localStorage.setItem(CONFIG_KEY, JSON.stringify({ apiKey, spreadsheetId }));
+}
+
+// Очистка конфигурации
+export function clearConfig(): void {
+  localStorage.removeItem(CONFIG_KEY);
+}
+
+// Проверка подключения
+export function isConnected(): boolean {
+  const config = getConfig();
+  return !!(config.apiKey && config.spreadsheetId);
+}
+
+// Получение текущей конфигурации
+export function getCurrentConfig(): Config {
+  return getConfig();
+}
 
 const BASE_URL = 'https://sheets.googleapis.com/v4/spreadsheets';
 
@@ -116,9 +134,43 @@ export interface AuditEntry {
   newValue: string;
 }
 
+// Проверка подключения к Google Sheets
+export async function testConnection(): Promise<{ success: boolean; title?: string; error?: string }> {
+  const config = getConfig();
+  if (!config.apiKey || !config.spreadsheetId) {
+    return { success: false, error: 'API ключ или ID таблицы не указаны' };
+  }
+
+  try {
+    const url = `${BASE_URL}/${config.spreadsheetId}?key=${config.apiKey}&fields=properties.title`;
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { 
+        success: false, 
+        error: `Ошибка ${response.status}: ${errorData.error?.message || response.statusText}` 
+      };
+    }
+
+    const data = await response.json();
+    return { success: true, title: data.properties?.title };
+  } catch (error) {
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Неизвестная ошибка' 
+    };
+  }
+}
+
 // Чтение данных из листа
-export async function readSheet(sheetName: string): Promise<any[][]> {
-  const url = `${BASE_URL}/${SPREADSHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
+async function readSheet(sheetName: string): Promise<any[][]> {
+  const config = getConfig();
+  if (!config.apiKey || !config.spreadsheetId) {
+    throw new Error('Не настроено подключение к Google Sheets');
+  }
+
+  const url = `${BASE_URL}/${config.spreadsheetId}/values/${encodeURIComponent(sheetName)}?key=${config.apiKey}`;
   
   try {
     const response = await fetch(url);
@@ -134,8 +186,13 @@ export async function readSheet(sheetName: string): Promise<any[][]> {
 }
 
 // Запись данных в лист
-export async function writeToSheet(sheetName: string, values: any[][]): Promise<void> {
-  const url = `${BASE_URL}/${SPREADSHEET_ID}/values/${encodeURIComponent(sheetName)}:append?valueInputOption=USER_ENTERED&key=${API_KEY}`;
+async function writeToSheet(sheetName: string, values: any[][]): Promise<void> {
+  const config = getConfig();
+  if (!config.apiKey || !config.spreadsheetId) {
+    throw new Error('Не настроено подключение к Google Sheets');
+  }
+
+  const url = `${BASE_URL}/${config.spreadsheetId}/values/${encodeURIComponent(sheetName)}:append?valueInputOption=USER_ENTERED&key=${config.apiKey}`;
   
   try {
     const response = await fetch(url, {
