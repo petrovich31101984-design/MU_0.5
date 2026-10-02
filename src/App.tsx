@@ -488,7 +488,7 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
                 const bal = arr - exp;
                 const expenseCount = getExpenseCount(emp.id, lastMonth);
                 return (
-                  <tr key={emp.id} className="border-b border-slate-100 hover:bg-slate-50">
+                  <tr key={emp.id} className="border-b border-slate-100 hover:bg-blue-50 hover:shadow-md transition-all duration-200 cursor-pointer">
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white ${
