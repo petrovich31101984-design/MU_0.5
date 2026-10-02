@@ -403,7 +403,7 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {notifications.length === 0 ? (
               <div className="text-center text-slate-400 mt-8">
-                <div className="text-3xl mb-2">✓</div>
+                <div className="text-3xl mb-2">🔕</div>
                 <p>Нет новых уведомлений</p>
               </div>
             ) : (
@@ -441,7 +441,7 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.length === 0 ? (
               <div className="text-center text-slate-400 mt-8">
-                <div className="text-3xl mb-2">✓</div>
+                <div className="text-3xl mb-2">📭</div>
                 <p>Нет новых сообщений</p>
               </div>
             ) : (
