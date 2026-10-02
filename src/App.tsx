@@ -518,9 +518,9 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
                   <tr key={emp.id} className="border-b border-slate-100 hover:bg-blue-50 hover:shadow-md transition-all duration-200 cursor-pointer">
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white ${
-                          emp.status === 'Активен' ? 'bg-emerald-500' : emp.status === 'Отпуск' ? 'bg-yellow-500' : 'bg-slate-400'
-                        }`}>{emp.fullName[0]}</div>
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white bg-blue-500">
+                          {emp.fullName.split(' ').slice(0, 2).map(n => n[0]).join('')}
+                        </div>
                         <div>
                           <div className="text-sm font-medium text-slate-800">{emp.fullName}</div>
                           <div className="text-xs text-slate-500">{emp.position}</div>
