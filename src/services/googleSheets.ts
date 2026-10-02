@@ -1,50 +1,135 @@
 /**
- * Google Sheets API Service
- * Конфигурация хранится в localStorage
+ * Google Sheets через Apps Script Web App
+ * 
+ * НЕ требует Google Cloud Console или API ключей!
+ * Работает через опубликованный Apps Script URL.
  */
 
+const CONFIG_KEY = 'appsScriptConfig';
+
 interface Config {
-  apiKey: string;
-  spreadsheetId: string;
+  scriptUrl: string;
 }
 
-const CONFIG_KEY = 'googleSheetsConfig';
-
-// Получение конфигурации из localStorage
 function getConfig(): Config {
   const saved = localStorage.getItem(CONFIG_KEY);
   if (saved) {
     try {
       return JSON.parse(saved);
     } catch {
-      return { apiKey: '', spreadsheetId: '' };
+      return { scriptUrl: '' };
     }
   }
-  return { apiKey: '', spreadsheetId: '' };
+  return { scriptUrl: '' };
 }
 
-// Сохранение конфигурации в localStorage
-export function saveConfig(apiKey: string, spreadsheetId: string): void {
-  localStorage.setItem(CONFIG_KEY, JSON.stringify({ apiKey, spreadsheetId }));
+export function saveConfig(scriptUrl: string): void {
+  localStorage.setItem(CONFIG_KEY, JSON.stringify({ scriptUrl }));
 }
 
-// Очистка конфигурации
 export function clearConfig(): void {
   localStorage.removeItem(CONFIG_KEY);
 }
 
-// Проверка подключения
 export function isConnected(): boolean {
   const config = getConfig();
-  return !!(config.apiKey && config.spreadsheetId);
+  return !!config.scriptUrl;
 }
 
-// Получение текущей конфигурации
 export function getCurrentConfig(): Config {
   return getConfig();
 }
 
-const BASE_URL = 'https://sheets.googleapis.com/v4/spreadsheets';
+// Проверка подключения
+export async function testConnection(): Promise<{ success: boolean; title?: string; sheets?: string[]; error?: string }> {
+  const config = getConfig();
+  if (!config.scriptUrl) {
+    return { success: false, error: 'URL веб-приложения не указан' };
+  }
+
+  try {
+    const url = `${config.scriptUrl}?action=test`;
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      return { success: false, error: `Ошибка ${response.status}` };
+    }
+
+    const data = await response.json();
+    
+    if (data.error) {
+      return { success: false, error: data.error };
+    }
+
+    return { 
+      success: true, 
+      title: data.title,
+      sheets: data.sheets
+    };
+  } catch (error) {
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Не удалось подключиться' 
+    };
+  }
+}
+
+// Универсальная функция GET
+async function fetchData(action: string): Promise<any[]> {
+  const config = getConfig();
+  if (!config.scriptUrl) {
+    throw new Error('Не настроено подключение');
+  }
+
+  const url = `${config.scriptUrl}?action=${action}`;
+  
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    const data = await response.json();
+    
+    if (data.error) {
+      throw new Error(data.error);
+    }
+    
+    return data;
+  } catch (error) {
+    console.error(`Ошибка получения ${action}:`, error);
+    throw error;
+  }
+}
+
+// Универсальная функция POST
+async function postData(action: string, data: any): Promise<void> {
+  const config = getConfig();
+  if (!config.scriptUrl) {
+    throw new Error('Не настроено подключение');
+  }
+
+  try {
+    const response = await fetch(config.scriptUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action, data })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
+    const result = await response.json();
+    if (result.error) {
+      throw new Error(result.error);
+    }
+  } catch (error) {
+    console.error(`Ошибка записи ${action}:`, error);
+    throw error;
+  }
+}
+
+// ==================== ТИПЫ ====================
 
 export interface Employee {
   id: string;
@@ -134,368 +219,156 @@ export interface AuditEntry {
   newValue: string;
 }
 
-// Проверка подключения к Google Sheets
-export async function testConnection(): Promise<{ success: boolean; title?: string; error?: string }> {
-  const config = getConfig();
-  if (!config.apiKey || !config.spreadsheetId) {
-    return { success: false, error: 'API ключ или ID таблицы не указаны' };
-  }
+// ==================== ФУНКЦИИ ЧТЕНИЯ ====================
 
-  try {
-    const url = `${BASE_URL}/${config.spreadsheetId}?key=${config.apiKey}&fields=properties.title`;
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      return { 
-        success: false, 
-        error: `Ошибка ${response.status}: ${errorData.error?.message || response.statusText}` 
-      };
-    }
-
-    const data = await response.json();
-    return { success: true, title: data.properties?.title };
-  } catch (error) {
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Неизвестная ошибка' 
-    };
-  }
-}
-
-// Чтение данных из листа
-async function readSheet(sheetName: string): Promise<any[][]> {
-  const config = getConfig();
-  if (!config.apiKey || !config.spreadsheetId) {
-    throw new Error('Не настроено подключение к Google Sheets');
-  }
-
-  const url = `${BASE_URL}/${config.spreadsheetId}/values/${encodeURIComponent(sheetName)}?key=${config.apiKey}`;
-  
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data.values || [];
-  } catch (error) {
-    console.error(`Ошибка чтения листа ${sheetName}:`, error);
-    throw error;
-  }
-}
-
-// Запись данных в лист
-async function writeToSheet(sheetName: string, values: any[][]): Promise<void> {
-  const config = getConfig();
-  if (!config.apiKey || !config.spreadsheetId) {
-    throw new Error('Не настроено подключение к Google Sheets');
-  }
-
-  const url = `${BASE_URL}/${config.spreadsheetId}/values/${encodeURIComponent(sheetName)}:append?valueInputOption=USER_ENTERED&key=${config.apiKey}`;
-  
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ values }),
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-  } catch (error) {
-    console.error(`Ошибка записи в лист ${sheetName}:`, error);
-    throw error;
-  }
-}
-
-// Получение сотрудников
 export async function getEmployees(): Promise<Employee[]> {
-  const data = await readSheet('Сотрудники');
-  if (data.length < 2) return [];
-  
-  const headers = data[0];
-  return data.slice(1).map(row => {
-    const obj: any = {};
-    headers.forEach((h, i) => {
-      obj[h] = row[i] || '';
-    });
-    
-    return {
-      id: obj['ID'] || '',
-      personalNumber: obj['Персональный номер'] || '',
-      fullName: obj['ФИО'] || '',
-      status: obj['Статус'] || 'Активен',
-      position: obj['Должность'] || '',
-      hireDate: obj['Дата найма'] || '',
-      blocked: obj['Заблокирован'] === 'ДА',
-      phone: obj['Телефон'] || '',
-      lastActivity: obj['Последний вход'] || '',
-      note: obj['Примечание'] || '',
-    };
-  });
+  const data = await fetchData('getEmployees');
+  return data.map((row: any) => ({
+    id: row['ID'] || '',
+    personalNumber: row['Персональный номер'] || '',
+    fullName: row['ФИО'] || '',
+    status: row['Статус'] || 'Активен',
+    position: row['Должность'] || '',
+    hireDate: row['Дата найма'] || '',
+    blocked: row['Заблокирован'] === 'ДА',
+    phone: row['Телефон'] || '',
+    lastActivity: row['Последний вход'] || '',
+    note: row['Примечание'] || '',
+  }));
 }
 
-// Получение номенклатуры
 export async function getNomenclature(): Promise<Nomenclature[]> {
-  const data = await readSheet('Номенклатура');
-  if (data.length < 2) return [];
+  const data = await fetchData('getNomenclature');
+  const prices = await fetchData('getPrices');
   
-  const headers = data[0];
-  return data.slice(1).map(row => {
-    const obj: any = {};
-    headers.forEach((h, i) => {
-      obj[h] = row[i] || '';
-    });
+  return data.map((row: any) => {
+    const currentPriceRow = prices.find((p: any) => 
+      p['Номенклатура_ID'] === row['ID'] && 
+      (!p['Дата окончания'] || p['Дата окончания'] === '')
+    );
     
     return {
-      id: obj['ID'] || '',
-      name: obj['Название'] || '',
-      category: obj['Категория'] || 'Лекарство',
-      unit: obj['Ед. измерения'] || 'Штуки',
-      manufacturer: obj['Производитель'] || '',
-      active: obj['Актуальна'] === 'ДА',
-      currentPrice: parseFloat(obj['Цена'] || '0'),
+      id: row['ID'] || '',
+      name: row['Название'] || '',
+      category: row['Категория'] || 'Лекарство',
+      unit: row['Ед. измерения'] || 'Штуки',
+      manufacturer: row['Производитель'] || '',
+      active: row['Актуальна'] === 'ДА',
+      currentPrice: parseFloat(currentPriceRow?.['Цена за ед. (₽)'] || '0'),
     };
   });
 }
 
-// Получение прихода
 export async function getArrivals(): Promise<Arrival[]> {
-  const data = await readSheet('Приход');
-  if (data.length < 2) return [];
-  
-  const headers = data[0];
-  return data.slice(1).map(row => {
-    const obj: any = {};
-    headers.forEach((h, i) => {
-      obj[h] = row[i] || '';
-    });
-    
-    return {
-      id: obj['ID'] || '',
-      employeeId: obj['Сотрудник_ID'] || '',
-      date: obj['Дата'] || '',
-      month: obj['Месяц'] || '',
-      amount: parseFloat(obj['Сумма (₽)'] || '0'),
-      shifts: parseInt(obj['Количество смен'] || '0'),
-      addedBy: obj['Кем внесено'] || '',
-      type: obj['Тип'] || 'Плановый',
-      comment: obj['Комментарий'] || '',
-    };
-  });
+  const data = await fetchData('getArrivals');
+  return data.map((row: any) => ({
+    id: row['ID'] || '',
+    employeeId: row['Сотрудник_ID'] || '',
+    date: row['Дата'] || '',
+    month: row['Месяц'] || '',
+    amount: parseFloat(row['Сумма (₽)'] || '0'),
+    shifts: parseInt(row['Количество смен'] || '0'),
+    addedBy: row['Кем внесено'] || '',
+    type: row['Тип'] || 'Плановый',
+    comment: row['Комментарий'] || '',
+  }));
 }
 
-// Получение расхода
 export async function getExpenses(): Promise<Expense[]> {
-  const data = await readSheet('Расход');
-  if (data.length < 2) return [];
-  
-  const headers = data[0];
-  return data.slice(1).map(row => {
-    const obj: any = {};
-    headers.forEach((h, i) => {
-      obj[h] = row[i] || '';
-    });
-    
-    return {
-      id: obj['ID'] || '',
-      employeeId: obj['Сотрудник_ID'] || '',
-      date: obj['Дата внесения'] || '',
-      callDate: obj['Дата вызова'] || '',
-      month: obj['Месяц'] || '',
-      nomenclatureId: obj['Номенклатура_ID'] || '',
-      quantity: parseInt(obj['Количество'] || '0'),
-      patientName: obj['Пациент ФИО'] || '',
-      patientBirthDate: obj['Пациент ДР'] || '',
-      callId: obj['Вызов_ID'] || '',
-    };
-  });
+  const data = await fetchData('getExpenses');
+  return data.map((row: any) => ({
+    id: row['ID'] || '',
+    employeeId: row['Сотрудник_ID'] || '',
+    date: row['Дата внесения'] || '',
+    callDate: row['Дата вызова'] || '',
+    month: row['Месяц'] || '',
+    nomenclatureId: row['Номенклатура_ID'] || '',
+    quantity: parseInt(row['Количество'] || '0'),
+    patientName: row['Пациент ФИО'] || '',
+    patientBirthDate: row['Пациент ДР'] || '',
+    callId: row['Вызов_ID'] || '',
+  }));
 }
 
-// Получение возвратов
 export async function getReturns(): Promise<ReturnOperation[]> {
-  const data = await readSheet('Возвраты');
-  if (data.length < 2) return [];
-  
-  const headers = data[0];
-  return data.slice(1).map(row => {
-    const obj: any = {};
-    headers.forEach((h, i) => {
-      obj[h] = row[i] || '';
-    });
-    
-    return {
-      id: obj['ID'] || '',
-      employeeId: obj['Сотрудник_ID'] || '',
-      date: obj['Дата создания'] || '',
-      nomenclatureId: obj['Номенклатура_ID'] || '',
-      quantity: parseInt(obj['Количество'] || '0'),
-      status: obj['Статус'] || 'Новый',
-      correctedBy: obj['Кем скорректировано'] || '',
-      correctedQuantity: obj['Скорректированное кол-во'] ? parseInt(obj['Скорректированное кол-во']) : null,
-      comment: obj['Комментарий'] || '',
-      reason: obj['Причина возврата'] || '',
-    };
-  });
+  const data = await fetchData('getReturns');
+  return data.map((row: any) => ({
+    id: row['ID'] || '',
+    employeeId: row['Сотрудник_ID'] || '',
+    date: row['Дата создания'] || '',
+    nomenclatureId: row['Номенклатура_ID'] || '',
+    quantity: parseInt(row['Количество'] || '0'),
+    status: row['Статус'] || 'Новый',
+    correctedBy: row['Кем скорректировано'] || '',
+    correctedQuantity: row['Скорректированное кол-во'] ? parseInt(row['Скорректированное кол-во']) : null,
+    comment: row['Комментарий'] || '',
+    reason: row['Причина'] || '',
+  }));
 }
 
-// Получение сообщений чата
 export async function getChatMessages(): Promise<ChatMessage[]> {
-  const data = await readSheet('Чат');
-  if (data.length < 2) return [];
-  
-  const headers = data[0];
-  return data.slice(1).map(row => {
-    const obj: any = {};
-    headers.forEach((h, i) => {
-      obj[h] = row[i] || '';
-    });
-    
-    return {
-      id: obj['ID'] || '',
-      fromId: obj['От кого (ID)'] || '',
-      fromName: obj['От кого (ФИО)'] || '',
-      toId: obj['Кому (ID)'] || '',
-      toName: obj['Кому (ФИО)'] || '',
-      role: obj['Роль отправителя'] || 'Сотрудник',
-      text: obj['Текст сообщения'] || '',
-      date: obj['Дата и время'] || '',
-      read: obj['Прочитано'] === 'ДА',
-      priority: obj['Приоритет'] || 'Обычное',
-    };
-  });
+  const data = await fetchData('getChat');
+  return data.map((row: any) => ({
+    id: row['ID'] || '',
+    fromId: row['От кого (ID)'] || '',
+    fromName: row['От кого (ФИО)'] || '',
+    toId: row['Кому (ID)'] || '',
+    toName: row['Кому (ФИО)'] || '',
+    role: row['Роль'] || 'Сотрудник',
+    text: row['Текст'] || '',
+    date: row['Дата и время'] || '',
+    read: row['Прочитано'] === 'ДА',
+    priority: row['Приоритет'] || 'Обычное',
+  }));
 }
 
-// Получение журнала изменений
 export async function getAuditLog(): Promise<AuditEntry[]> {
-  const data = await readSheet('Журнал изменений');
-  if (data.length < 2) return [];
-  
-  const headers = data[0];
-  return data.slice(1).map(row => {
-    const obj: any = {};
-    headers.forEach((h, i) => {
-      obj[h] = row[i] || '';
-    });
-    
-    return {
-      id: obj['ID'] || '',
-      date: obj['Дата и время'] || '',
-      userId: obj['Пользователь ID'] || '',
-      userName: obj['Пользователь ФИО'] || '',
-      role: obj['Роль'] || '',
-      sheet: obj['Лист'] || '',
-      recordId: obj['Запись_ID'] || '',
-      action: obj['Действие'] || '',
-      field: obj['Поле'] || '',
-      oldValue: obj['Было'] || '',
-      newValue: obj['Стало'] || '',
-    };
-  });
+  const data = await fetchData('getAuditLog');
+  return data.map((row: any) => ({
+    id: row['ID'] || '',
+    date: row['Дата и время'] || '',
+    userId: row['Пользователь ID'] || '',
+    userName: row['Пользователь ФИО'] || '',
+    role: row['Роль'] || '',
+    sheet: row['Лист'] || '',
+    recordId: row['Запись_ID'] || '',
+    action: row['Действие'] || '',
+    field: row['Поле'] || '',
+    oldValue: row['Было'] || '',
+    newValue: row['Стало'] || '',
+  }));
 }
 
-// Добавление сотрудника
+// ==================== ФУНКЦИИ ЗАПИСИ ====================
+
 export async function addEmployee(employee: Partial<Employee>): Promise<void> {
-  const values = [[
-    employee.id,
-    employee.personalNumber,
-    employee.fullName,
-    employee.status || 'Активен',
-    employee.position || '',
-    employee.hireDate || new Date().toISOString().split('T')[0],
-    employee.blocked ? 'ДА' : 'НЕТ',
-    employee.phone || '',
-    employee.lastActivity || '',
-    employee.note || '',
-  ]];
-  await writeToSheet('Сотрудники', values);
+  await postData('addEmployee', employee);
 }
 
-// Добавление расхода
-export async function addExpense(expense: Partial<Expense>): Promise<void> {
-  const values = [[
-    expense.id,
-    expense.employeeId,
-    expense.date || new Date().toISOString(),
-    expense.callDate,
-    expense.month,
-    expense.nomenclatureId,
-    expense.quantity,
-    expense.patientName,
-    expense.patientBirthDate,
-    expense.callId,
-  ]];
-  await writeToSheet('Расход', values);
-}
-
-// Добавление прихода
 export async function addArrival(arrival: Partial<Arrival>): Promise<void> {
-  const values = [[
-    arrival.id,
-    arrival.employeeId,
-    arrival.date || new Date().toISOString().split('T')[0],
-    arrival.month,
-    arrival.amount,
-    arrival.shifts,
-    arrival.addedBy || 'Руководитель',
-    arrival.type || 'Плановый',
-    arrival.comment || '',
-  ]];
-  await writeToSheet('Приход', values);
+  await postData('addArrival', arrival);
 }
 
-// Добавление возврата
+export async function addExpense(expense: Partial<Expense>): Promise<void> {
+  await postData('addExpense', expense);
+}
+
 export async function addReturn(returnOp: Partial<ReturnOperation>): Promise<void> {
-  const values = [[
-    returnOp.id,
-    returnOp.employeeId,
-    returnOp.date || new Date().toISOString(),
-    returnOp.nomenclatureId,
-    returnOp.quantity,
-    returnOp.status || 'Новый',
-    returnOp.correctedBy || '',
-    returnOp.correctedQuantity || '',
-    returnOp.comment || '',
-    returnOp.reason || '',
-  ]];
-  await writeToSheet('Возвраты', values);
+  await postData('addReturn', returnOp);
 }
 
-// Добавление сообщения в чат
 export async function addChatMessage(message: Partial<ChatMessage>): Promise<void> {
-  const values = [[
-    message.id,
-    message.fromId,
-    message.fromName,
-    message.toId,
-    message.toName,
-    message.role || 'Руководитель',
-    message.text,
-    new Date().toISOString(),
-    'НЕТ',
-    message.priority || 'Обычное',
-  ]];
-  await writeToSheet('Чат', values);
+  await postData('addChatMessage', message);
 }
 
-// Добавление записи в журнал
 export async function addAuditLog(log: Partial<AuditEntry>): Promise<void> {
-  const values = [[
-    log.id,
-    new Date().toISOString(),
-    log.userId,
-    log.userName,
-    log.role,
-    log.sheet,
-    log.recordId,
-    log.action,
-    log.field || '',
-    log.oldValue || '',
-    log.newValue || '',
-  ]];
-  await writeToSheet('Журнал изменений', values);
+  await postData('addAuditLog', log);
+}
+
+export async function updateNomenclature(id: string, data: any): Promise<void> {
+  await postData('updateNomenclature', { id, ...data });
+}
+
+export async function updateEmployee(id: string, data: any): Promise<void> {
+  await postData('updateEmployee', { id, data });
 }

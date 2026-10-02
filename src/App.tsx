@@ -58,8 +58,7 @@ type Page = 'dashboard' | 'employees' | 'nomenclature' | 'operations' | 'stock' 
 
 // ============ СТРАНИЦА НАСТРОЙКИ ПОДКЛЮЧЕНИЯ ============
 function SetupPage() {
-  const [apiKey, setApiKey] = useState('');
-  const [spreadsheetId, setSpreadsheetId] = useState('');
+  const [scriptUrl, setScriptUrl] = useState('');
   const [testing, setTesting] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
 
@@ -67,7 +66,7 @@ function SetupPage() {
     setTesting(true);
     setResult(null);
     
-    gs.saveConfig(apiKey, spreadsheetId);
+    gs.saveConfig(scriptUrl);
     const testResult = await gs.testConnection();
     
     if (testResult.success) {
@@ -94,13 +93,14 @@ function SetupPage() {
           <div>
             <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
               <span className="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-sm">1</span>
-              Получите API ключ
+              Создайте Google таблицу
             </h3>
             <div className="bg-slate-900 rounded-lg p-4 text-sm text-slate-300 space-y-2">
-              <p>1. Перейдите в <a href="https://console.cloud.google.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">Google Cloud Console</a></p>
-              <p>2. Создайте проект или выберите существующий</p>
-              <p>3. Включите <strong>Google Sheets API</strong></p>
-              <p>4. Создайте API ключ: Credentials → Create Credentials → API Key</p>
+              <p>1. Перейдите в <a href="https://sheets.google.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">Google Sheets</a></p>
+              <p>2. Создайте новую таблицу</p>
+              <p>3. Откройте <strong>Расширения → Apps Script</strong></p>
+              <p>4. Вставьте код из файла <code className="bg-slate-800 px-2 py-0.5 rounded">public/google-apps-script-webapp.js</code></p>
+              <p>5. Выполните функцию <code className="bg-slate-800 px-2 py-0.5 rounded">setupDatabase()</code></p>
             </div>
           </div>
 
@@ -108,13 +108,14 @@ function SetupPage() {
           <div>
             <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
               <span className="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-sm">2</span>
-              Создайте таблицу
+              Разверните как веб-приложение
             </h3>
             <div className="bg-slate-900 rounded-lg p-4 text-sm text-slate-300 space-y-2">
-              <p>1. Перейдите в <a href="https://sheets.google.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">Google Sheets</a></p>
-              <p>2. Создайте новую таблицу</p>
-              <p>3. Выполните скрипт установки (расширения → Apps Script → вставьте код из <code className="bg-slate-800 px-2 py-0.5 rounded">public/google-apps-script.js</code>)</p>
-              <p>4. Скопируйте ID таблицы из URL: <code className="bg-slate-800 px-2 py-0.5 rounded">docs.google.com/spreadsheets/d/<strong>ID</strong>/edit</code></p>
+              <p>1. В Apps Script нажмите <strong>Развернуть → Новое развертывание</strong></p>
+              <p>2. Тип: <strong>Веб-приложение</strong></p>
+              <p>3. Выполнять от имени: <strong>Меня</strong></p>
+              <p>4. Доступ: <strong>Все</strong> (или "Все, у кого есть ссылка")</p>
+              <p>5. Нажмите <strong>Развернуть</strong> и скопируйте URL</p>
             </div>
           </div>
 
@@ -122,35 +123,27 @@ function SetupPage() {
           <div>
             <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
               <span className="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-sm">3</span>
-              Настройте доступ
+              Вставьте URL
             </h3>
             <div className="bg-slate-900 rounded-lg p-4 text-sm text-slate-300">
-              <p>Откройте таблицу → Поделиться → "Все, у кого есть ссылка" → Читатель</p>
+              <p>Скопированный URL вставьте в поле ниже и нажмите "Подключиться"</p>
             </div>
           </div>
 
           {/* Форма подключения */}
           <div className="border-t border-slate-700 pt-6 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">API ключ</label>
-              <input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="AIzaSy..."
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">ID таблицы</label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">URL веб-приложения Apps Script</label>
               <input
                 type="text"
-                value={spreadsheetId}
-                onChange={(e) => setSpreadsheetId(e.target.value)}
-                placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"
+                value={scriptUrl}
+                onChange={(e) => setScriptUrl(e.target.value)}
+                placeholder="https://script.google.com/macros/s/AKfycbx..."
                 className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
               />
+              <p className="text-xs text-slate-500 mt-1">
+                Скопируйте URL после развертывания Apps Script как веб-приложения
+              </p>
             </div>
 
             {result && (
@@ -161,7 +154,7 @@ function SetupPage() {
 
             <button
               onClick={handleConnect}
-              disabled={testing || !apiKey || !spreadsheetId}
+              disabled={testing || !scriptUrl}
               className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 rounded-lg text-white font-medium transition-colors"
             >
               {testing ? 'Проверка подключения...' : 'Подключиться'}
@@ -1311,15 +1304,11 @@ function SettingsPage({ data }: { data: ReturnType<typeof useData> }) {
             <span className="text-sm text-white">Статус: Подключено</span>
           </div>
           <div className="bg-slate-900 rounded-lg p-3">
-            <div className="text-xs text-slate-400">API Key</div>
-            <div className="text-sm text-white font-mono">{config.apiKey.substring(0, 10)}...{config.apiKey.substring(config.apiKey.length - 4)}</div>
-          </div>
-          <div className="bg-slate-900 rounded-lg p-3">
-            <div className="text-xs text-slate-400">Spreadsheet ID</div>
-            <div className="text-sm text-white font-mono">{config.spreadsheetId.substring(0, 20)}...</div>
+            <div className="text-xs text-slate-400">URL веб-приложения</div>
+            <div className="text-sm text-white font-mono break-all">{config.scriptUrl.substring(0, 50)}...</div>
           </div>
           <p className="text-xs text-slate-500">
-            Данные сохраняются в localStorage браузера
+            Подключение через Google Apps Script Web App
           </p>
         </div>
       </div>
