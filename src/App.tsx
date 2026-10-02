@@ -466,10 +466,10 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
               <tr className="border-b border-slate-200 text-left bg-slate-50">
                 <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase">Сотрудник</th>
                 <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase">Статус</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase text-right">Приход<br />(за предыдущий месяц)</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase text-right">Расход<br />(за предыдущий месяц)</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase text-right">Остаток<br />(на начало месяца)</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase text-right">Листов расхода<br />(за прошлый месяц)</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase text-right">Приход</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase text-right">Расход</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase text-right">Остаток</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase text-right">Листов расхода</th>
               </tr>
             </thead>
             <tbody>
