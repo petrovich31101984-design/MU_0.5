@@ -224,11 +224,20 @@ export default function App() {
 
   if (data.loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="text-4xl mb-4 animate-pulse">💊</div>
-          <div className="text-white text-lg">Загрузка данных из Google Sheets...</div>
-          <div className="text-slate-400 text-sm mt-2">Подключение к таблице</div>
+          <img 
+            src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" 
+            alt="АлкоСпас" 
+            className="w-48 h-48 object-contain mx-auto mb-6 animate-pulse"
+          />
+          <div className="text-slate-800 text-xl font-semibold mb-2">Загрузка данных...</div>
+          <div className="text-slate-500 text-sm">Подключение к Google Sheets</div>
+          <div className="mt-6 flex justify-center gap-1">
+            <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+            <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+            <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          </div>
         </div>
       </div>
     );
@@ -236,23 +245,27 @@ export default function App() {
 
   if (data.error) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-        <div className="bg-slate-800 rounded-2xl p-8 border border-red-500/30 max-w-lg w-full">
-          <div className="text-4xl text-center mb-4">⚠️</div>
-          <h2 className="text-xl font-bold text-white text-center mb-2">Ошибка подключения</h2>
-          <p className="text-red-400 text-sm text-center mb-4">{data.error}</p>
-          <div className="bg-slate-900 rounded-lg p-4 mb-4">
-            <p className="text-sm text-slate-400 mb-2">Проверьте:</p>
-            <ul className="text-sm text-slate-300 space-y-1 list-disc list-inside">
-              <li>API ключ в src/services/googleSheets.ts</li>
-              <li>ID таблицы в src/services/googleSheets.ts</li>
-              <li>Доступ к таблице (публичный или через сервисный аккаунт)</li>
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl p-8 border border-red-200 shadow-lg max-w-lg w-full">
+          <img 
+            src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" 
+            alt="АлкоСпас" 
+            className="w-32 h-32 object-contain mx-auto mb-4"
+          />
+          <h2 className="text-xl font-bold text-slate-800 text-center mb-2">Ошибка подключения</h2>
+          <p className="text-red-600 text-sm text-center mb-4">{data.error}</p>
+          <div className="bg-slate-50 rounded-lg p-4 mb-4 border border-slate-200">
+            <p className="text-sm text-slate-600 mb-2 font-medium">Проверьте:</p>
+            <ul className="text-sm text-slate-700 space-y-1 list-disc list-inside">
+              <li>URL веб-приложения Apps Script</li>
+              <li>Доступ к таблице (публичный)</li>
               <li>Структуру таблицы (должны быть все листы)</li>
+              <li>Интернет-соединение</li>
             </ul>
           </div>
           <button
             onClick={() => data.refresh()}
-            className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg text-white font-medium"
+            className="w-full px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 rounded-lg text-white font-medium shadow-lg shadow-red-600/20"
           >
             🔄 Повторить попытку
           </button>
