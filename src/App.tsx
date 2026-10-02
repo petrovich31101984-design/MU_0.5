@@ -87,9 +87,9 @@ function SetupPage() {
           <div className="relative">
             <div className="absolute inset-0 bg-red-500/20 blur-3xl rounded-full"></div>
             <img 
-              src="https://image.qwenlm.ai/generated-images/09182d32-1364-43fa-89b5-c263d227ed13/_result.png" 
+              src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" 
               alt="АлкоСпас" 
-              className="relative w-48 h-48 object-contain drop-shadow-2xl"
+              className="relative w-56 h-56 object-contain drop-shadow-2xl rounded-2xl bg-white p-2"
             />
           </div>
         </div>
@@ -281,9 +281,9 @@ export default function App() {
       <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-slate-800 border-r border-slate-700 flex flex-col transition-all duration-300 fixed h-full z-40`}>
         <div className="p-4 border-b border-slate-700 flex items-center gap-3">
           <img 
-            src="https://image.qwenlm.ai/generated-images/09182d32-1364-43fa-89b5-c263d227ed13/_result.png" 
+            src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" 
             alt="АлкоСпас" 
-            className="w-10 h-10 rounded-lg object-contain shrink-0 bg-white/10 p-0.5"
+            className="w-10 h-10 rounded-lg object-contain shrink-0 bg-white p-0.5"
           />
           {sidebarOpen && (
             <div className="overflow-hidden">
