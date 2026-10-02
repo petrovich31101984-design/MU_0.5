@@ -263,7 +263,7 @@ export default function App() {
   }
 
   const menuItems: { id: Page; label: string; icon: string }[] = [
-    { id: 'dashboard', label: 'Панель управления', icon: '📊' },
+    { id: 'dashboard', label: 'Панель руководителя', icon: '👨‍⚕️' },
     { id: 'employees', label: 'Сотрудники', icon: '👥' },
     { id: 'nomenclature', label: 'Номенклатура', icon: '💊' },
     { id: 'operations', label: 'Операции', icon: '📋' },
