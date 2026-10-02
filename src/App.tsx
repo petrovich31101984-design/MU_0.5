@@ -332,6 +332,27 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
   
   const pendingReturns = returns.filter(r => r.status === 'Новый').length;
 
+  // Состояния для уведомлений и сообщений
+  const [notifications, setNotifications] = useState([
+    { id: 1, text: 'Перерасход у сотрудника Морозов Д.А.', time: '2 часа назад', type: 'warning' },
+    { id: 2, text: 'Сотрудник Иванов И.И. не вносил данные 7 дней', time: '5 часов назад', type: 'alert' },
+    { id: 3, text: 'Новый возврат от Петрова М.С.', time: '1 день назад', type: 'info' },
+  ]);
+
+  const [messages, setMessages] = useState([
+    { id: 1, from: 'Иванов И.И.', text: 'Прошу увеличить лимит по препаратам', time: '30 минут назад' },
+    { id: 2, from: 'Петрова М.С.', text: 'Отчет за месяц готов', time: '2 часа назад' },
+    { id: 3, from: 'Сидоров А.П.', text: 'Нужна консультация по возврату', time: '1 день назад' },
+  ]);
+
+  const handleNotificationClick = (id: number) => {
+    setNotifications(notifications.filter(n => n.id !== id));
+  };
+
+  const handleMessageClick = (id: number) => {
+    setMessages(messages.filter(m => m.id !== id));
+  };
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -365,6 +386,85 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
           <div className="text-2xl font-bold text-orange-600 mb-1">{totalExpenseCountLastMonth}</div>
           <div className="text-xs text-slate-500">
             {lastMonthDate.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })}
+          </div>
+        </div>
+      </div>
+
+      {/* Блоки уведомлений и сообщений */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Блок уведомлений */}
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm h-96 flex flex-col">
+          <div className="p-5 border-b border-slate-200 flex items-center justify-between">
+            <h3 className="text-lg font-bold text-slate-800">🔔 Уведомления</h3>
+            <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-semibold">
+              {notifications.length}
+            </span>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {notifications.length === 0 ? (
+              <div className="text-center text-slate-400 mt-8">
+                <div className="text-3xl mb-2">✓</div>
+                <p>Нет новых уведомлений</p>
+              </div>
+            ) : (
+              notifications.map(notif => (
+                <div
+                  key={notif.id}
+                  onClick={() => handleNotificationClick(notif.id)}
+                  className={`p-4 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
+                    notif.type === 'warning' ? 'bg-yellow-50 border-yellow-200 hover:bg-yellow-100' :
+                    notif.type === 'alert' ? 'bg-red-50 border-red-200 hover:bg-red-100' :
+                    'bg-blue-50 border-blue-200 hover:bg-blue-100'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex-1">
+                      <p className="text-sm text-slate-800 font-medium">{notif.text}</p>
+                      <p className="text-xs text-slate-500 mt-1">{notif.time}</p>
+                    </div>
+                    <span className="text-slate-400 text-lg">×</span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Блок сообщений */}
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm h-96 flex flex-col">
+          <div className="p-5 border-b border-slate-200 flex items-center justify-between">
+            <h3 className="text-lg font-bold text-slate-800">💬 Сообщения</h3>
+            <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
+              {messages.length}
+            </span>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {messages.length === 0 ? (
+              <div className="text-center text-slate-400 mt-8">
+                <div className="text-3xl mb-2">✓</div>
+                <p>Нет новых сообщений</p>
+              </div>
+            ) : (
+              messages.map(msg => (
+                <div
+                  key={msg.id}
+                  onClick={() => handleMessageClick(msg.id)}
+                  className="p-4 rounded-lg border border-slate-200 bg-slate-50 cursor-pointer transition-all hover:shadow-md hover:bg-slate-100"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">
+                      {msg.from.split(' ').map(n => n[0]).join('')}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-slate-800">{msg.from}</p>
+                      <p className="text-sm text-slate-600 mt-1">{msg.text}</p>
+                      <p className="text-xs text-slate-500 mt-1">{msg.time}</p>
+                    </div>
+                    <span className="text-slate-400 text-lg">×</span>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
