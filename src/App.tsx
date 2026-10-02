@@ -301,9 +301,8 @@ export default function App() {
           {sidebarOpen && (
             <div className="overflow-hidden">
               <h1 className="text-sm font-bold text-white whitespace-nowrap">АлкоСпас</h1>
-              <p className="text-xs text-slate-400 leading-tight">
-                Система учёта лекарственных средств <span className="text-emerald-400 font-semibold">(v. 0.5)</span>
-              </p>
+              <p className="text-xs text-slate-400 leading-tight">Система учёта лекарственных средств</p>
+              <p className="text-xs text-emerald-400 font-semibold">(v. 0.5)</p>
             </div>
           )}
         </div>
