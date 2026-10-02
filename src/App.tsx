@@ -558,16 +558,11 @@ function EmployeesPage({ data }: { data: ReturnType<typeof useData> }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-800">Сотрудники</h2>
-          <p className="text-slate-500 text-sm mt-1">Всего: {employees.length} | Активных: {employees.filter(e => e.status === 'Активен').length}</p>
-        </div>
+      <div className="flex gap-3">
+        <input type="text" placeholder="Поиск по ФИО или номеру..." value={search} onChange={e => setSearch(e.target.value)}
+          className="flex-1 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-sm" />
         <button onClick={() => setShowAdd(true)} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white font-medium shadow-sm">+ Добавить сотрудника</button>
       </div>
-
-      <input type="text" placeholder="Поиск по ФИО или номеру..." value={search} onChange={e => setSearch(e.target.value)}
-        className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-sm" />
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
