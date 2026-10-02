@@ -80,15 +80,29 @@ function SetupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-red-950/20 to-slate-900 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
+        {/* Логотип АлкоСпас */}
+        <div className="flex justify-center mb-6">
+          <div className="relative">
+            <div className="absolute inset-0 bg-red-500/20 blur-3xl rounded-full"></div>
+            <img 
+              src="https://image.qwenlm.ai/generated-images/09182d32-1364-43fa-89b5-c263d227ed13/_result.png" 
+              alt="АлкоСпас" 
+              className="relative w-48 h-48 object-contain drop-shadow-2xl"
+            />
+          </div>
+        </div>
+        
         <div className="text-center mb-8">
-          <div className="text-6xl mb-4">🔌</div>
-          <h1 className="text-3xl font-bold text-white mb-2">Подключение к Google Sheets</h1>
-          <p className="text-slate-400">Настройте подключение для работы с базой данных</p>
+          <h1 className="text-4xl font-bold text-white mb-2">
+            <span className="bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">АлкоСпас</span>
+          </h1>
+          <p className="text-lg text-slate-300 mb-1">Система учёта лекарственных средств</p>
+          <p className="text-sm text-slate-500">Выездное подразделение медицинской помощи</p>
         </div>
 
-        <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700 space-y-6">
+        <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl p-8 border border-red-500/20 shadow-2xl shadow-red-500/5 space-y-6">
           {/* Шаг 1 */}
           <div>
             <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
@@ -155,11 +169,30 @@ function SetupPage() {
             <button
               onClick={handleConnect}
               disabled={testing || !scriptUrl}
-              className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 disabled:text-slate-500 rounded-lg text-white font-medium transition-colors"
+              className="w-full px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 disabled:from-slate-700 disabled:to-slate-700 disabled:text-slate-500 rounded-lg text-white font-medium transition-all shadow-lg shadow-red-600/20 disabled:shadow-none"
             >
-              {testing ? 'Проверка подключения...' : 'Подключиться'}
+              {testing ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="animate-spin">⏳</span>
+                  Проверка подключения...
+                </span>
+              ) : (
+                <span className="flex items-center justify-center gap-2">
+                  🔌 Подключиться
+                </span>
+              )}
             </button>
           </div>
+        </div>
+        
+        {/* Футер с брендингом */}
+        <div className="mt-8 text-center">
+          <p className="text-xs text-slate-500">
+            © {new Date().getFullYear()} АлкоСпас • Выездная наркологическая помощь
+          </p>
+          <p className="text-xs text-slate-600 mt-1">
+            Подключение через Google Apps Script • Без API ключей
+          </p>
         </div>
       </div>
     </div>
@@ -247,11 +280,15 @@ export default function App() {
       {/* Sidebar */}
       <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-slate-800 border-r border-slate-700 flex flex-col transition-all duration-300 fixed h-full z-40`}>
         <div className="p-4 border-b border-slate-700 flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-blue-500 rounded-lg flex items-center justify-center text-lg shrink-0">💊</div>
+          <img 
+            src="https://image.qwenlm.ai/generated-images/09182d32-1364-43fa-89b5-c263d227ed13/_result.png" 
+            alt="АлкоСпас" 
+            className="w-10 h-10 rounded-lg object-contain shrink-0 bg-white/10 p-0.5"
+          />
           {sidebarOpen && (
             <div className="overflow-hidden">
-              <h1 className="text-sm font-bold text-white whitespace-nowrap">Учёт лекарств</h1>
-              <p className="text-xs text-slate-400 whitespace-nowrap">Google Sheets</p>
+              <h1 className="text-sm font-bold text-white whitespace-nowrap">АлкоСпас</h1>
+              <p className="text-xs text-slate-400 whitespace-nowrap">Учёт лекарств</p>
             </div>
           )}
         </div>
