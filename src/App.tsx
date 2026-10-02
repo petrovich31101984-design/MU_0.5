@@ -293,6 +293,28 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
   
   const activeEmployees = employees.filter(e => e.status === 'Активен');
 
+  // Тестовые данные сотрудников (если нет реальных данных)
+  const testEmployees = employees.length === 0 ? [
+    { id: 'EMP-001', personalNumber: '001', fullName: 'Иванов Иван Иванович', status: 'Активен' as const, position: 'Врач', hireDate: '2023-01-15', blocked: false, phone: '+7 (900) 123-45-67', lastActivity: '', note: '' },
+    { id: 'EMP-002', personalNumber: '002', fullName: 'Петрова Мария Сергеевна', status: 'Активен' as const, position: 'Фельдшер', hireDate: '2023-02-01', blocked: false, phone: '+7 (900) 234-56-78', lastActivity: '', note: '' },
+    { id: 'EMP-003', personalNumber: '003', fullName: 'Сидоров Алексей Петрович', status: 'Отпуск' as const, position: 'Врач', hireDate: '2022-07-10', blocked: false, phone: '+7 (900) 345-67-89', lastActivity: '', note: '' },
+    { id: 'EMP-004', personalNumber: '004', fullName: 'Козлова Елена Дмитриевна', status: 'Активен' as const, position: 'Фельдшер', hireDate: '2023-03-20', blocked: false, phone: '+7 (900) 456-78-90', lastActivity: '', note: '' },
+    { id: 'EMP-005', personalNumber: '005', fullName: 'Морозов Дмитрий Алексеевич', status: 'Активен' as const, position: 'Врач', hireDate: '2022-09-01', blocked: false, phone: '+7 (900) 567-89-01', lastActivity: '', note: '' },
+    { id: 'EMP-006', personalNumber: '006', fullName: 'Волкова Анна Игоревна', status: 'Активен' as const, position: 'Фельдшер', hireDate: '2023-05-15', blocked: false, phone: '+7 (900) 678-90-12', lastActivity: '', note: '' },
+    { id: 'EMP-007', personalNumber: '007', fullName: 'Новиков Сергей Владимирович', status: 'Неактивен' as const, position: 'Врач', hireDate: '2022-11-01', blocked: false, phone: '+7 (900) 789-01-23', lastActivity: '', note: '' },
+  ] : employees;
+
+  // Тестовые данные для сводки (если нет реальных данных)
+  const testSummaryData: Record<string, { arrival: number; expense: number; expenseCount: number }> | null = employees.length === 0 ? {
+    'EMP-001': { arrival: 15000, expense: 12500, expenseCount: 45 },
+    'EMP-002': { arrival: 12000, expense: 9800, expenseCount: 38 },
+    'EMP-003': { arrival: 14000, expense: 11200, expenseCount: 42 },
+    'EMP-004': { arrival: 13500, expense: 10500, expenseCount: 40 },
+    'EMP-005': { arrival: 16000, expense: 13800, expenseCount: 52 },
+    'EMP-006': { arrival: 11500, expense: 8900, expenseCount: 35 },
+    'EMP-007': { arrival: 14500, expense: 11800, expenseCount: 44 },
+  } : null;
+
   // Расчеты за предыдущий месяц
   const getArrival = (empId: string, month: string) => arrivals.filter(a => a.employeeId === empId && a.month === month).reduce((s, a) => s + a.amount, 0);
   const getExpenseValue = (empId: string, month: string) => expenses.filter(e => e.employeeId === empId && e.month === month).reduce((s, e) => {
@@ -301,9 +323,15 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
   }, 0);
   const getExpenseCount = (empId: string, month: string) => expenses.filter(e => e.employeeId === empId && e.month === month).length;
 
-  const totalArrivalLastMonth = activeEmployees.reduce((s, e) => s + getArrival(e.id, lastMonth), 0);
-  const totalExpenseLastMonth = activeEmployees.reduce((s, e) => s + getExpenseValue(e.id, lastMonth), 0);
-  const totalExpenseCountLastMonth = activeEmployees.reduce((s, e) => s + getExpenseCount(e.id, lastMonth), 0);
+  const totalArrivalLastMonth = testSummaryData 
+    ? Object.values(testSummaryData).reduce((s, d) => s + d.arrival, 0)
+    : activeEmployees.reduce((s, e) => s + getArrival(e.id, lastMonth), 0);
+  const totalExpenseLastMonth = testSummaryData 
+    ? Object.values(testSummaryData).reduce((s, d) => s + d.expense, 0)
+    : activeEmployees.reduce((s, e) => s + getExpenseValue(e.id, lastMonth), 0);
+  const totalExpenseCountLastMonth = testSummaryData 
+    ? Object.values(testSummaryData).reduce((s, d) => s + d.expenseCount, 0)
+    : activeEmployees.reduce((s, e) => s + getExpenseCount(e.id, lastMonth), 0);
   
   // Остаток на начало текущего месяца = Приход за прошлый месяц - Расход за прошлый месяц
   const balanceStartCurrentMonth = totalArrivalLastMonth - totalExpenseLastMonth;
@@ -457,7 +485,7 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
         <div className="p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
           <h3 className="text-lg font-bold text-slate-800">Сотрудники — общая сводка</h3>
           <div className="text-sm text-slate-600">
-            Активных сотрудников: <span className="font-semibold text-emerald-600">{activeEmployees.length}</span>
+            Активных сотрудников: <span className="font-semibold text-emerald-600">{testEmployees.filter(e => e.status === 'Активен').length}</span>
           </div>
         </div>
         <div className="overflow-x-auto" style={{ maxHeight: '400px' }}>
@@ -473,7 +501,7 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
               </tr>
             </thead>
             <tbody>
-              {employees
+              {testEmployees
                 .filter(e => e.status !== 'Уволен')
                 .sort((a, b) => {
                   // Сначала активные, потом остальные
@@ -483,11 +511,10 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
                 })
                 .slice(0, 5)
                 .map(emp => {
-                const arr = getArrival(emp.id, lastMonth);
-                const exp = getExpenseValue(emp.id, lastMonth);
-                const bal = arr - exp;
-                const expenseCount = getExpenseCount(emp.id, lastMonth);
-                return (
+                  const arr = testSummaryData ? testSummaryData[emp.id]?.arrival || 0 : getArrival(emp.id, lastMonth);
+                  const exp = testSummaryData ? testSummaryData[emp.id]?.expense || 0 : getExpenseValue(emp.id, lastMonth);
+                  const bal = arr - exp;
+                  const expenseCount = testSummaryData ? testSummaryData[emp.id]?.expenseCount || 0 : getExpenseCount(emp.id, lastMonth);                return (
                   <tr key={emp.id} className="border-b border-slate-100 hover:bg-blue-50 hover:shadow-md transition-all duration-200 cursor-pointer">
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
@@ -518,7 +545,7 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
             </tbody>
           </table>
         </div>
-        {employees.length === 0 && (
+        {testEmployees.length === 0 && (
           <div className="p-8 text-center text-slate-500">
             <div className="text-3xl mb-2">👥</div>
             <p>Нет данных о сотрудниках</p>
