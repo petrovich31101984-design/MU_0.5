@@ -333,17 +333,9 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
   const pendingReturns = returns.filter(r => r.status === 'Новый').length;
 
   // Состояния для уведомлений и сообщений
-  const [notifications, setNotifications] = useState([
-    { id: 1, text: 'Перерасход у сотрудника Морозов Д.А.', time: '2 часа назад', type: 'warning' },
-    { id: 2, text: 'Сотрудник Иванов И.И. не вносил данные 7 дней', time: '5 часов назад', type: 'alert' },
-    { id: 3, text: 'Новый возврат от Петрова М.С.', time: '1 день назад', type: 'info' },
-  ]);
+  const [notifications, setNotifications] = useState<Array<{ id: number; text: string; time: string; type: string }>>([]);
 
-  const [messages, setMessages] = useState([
-    { id: 1, from: 'Иванов И.И.', text: 'Прошу увеличить лимит по препаратам', time: '30 минут назад' },
-    { id: 2, from: 'Петрова М.С.', text: 'Отчет за месяц готов', time: '2 часа назад' },
-    { id: 3, from: 'Сидоров А.П.', text: 'Нужна консультация по возврату', time: '1 день назад' },
-  ]);
+  const [messages, setMessages] = useState<Array<{ id: number; from: string; text: string; time: string }>>([]);
 
   const handleNotificationClick = (id: number) => {
     setNotifications(notifications.filter(n => n.id !== id));
