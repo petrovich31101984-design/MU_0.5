@@ -68,14 +68,7 @@ function SetupPage() {
         <div className="flex justify-center mb-6">
           <div className="relative">
             <div className="absolute inset-0 bg-red-500/10 blur-3xl rounded-full"></div>
-            <div className="relative w-56 h-56 rounded-2xl bg-white p-2" style={{
-              borderLeft: '4px solid #ef4444',
-              borderBottom: '4px solid #ef4444',
-              borderRight: '4px solid #3b82f6',
-              borderTop: '4px solid #3b82f6'
-            }}>
-              <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-full h-full object-contain" />
-            </div>
+            <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="relative w-56 h-56 object-contain drop-shadow-xl" />
           </div>
         </div>
         <div className="text-center mb-8">
@@ -178,14 +171,7 @@ export default function App() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl p-8 border border-red-200 shadow-lg max-w-lg w-full">
-          <div className="w-32 h-32 mx-auto mb-4 rounded-2xl bg-white p-2" style={{
-            borderLeft: '3px solid #ef4444',
-            borderBottom: '3px solid #ef4444',
-            borderRight: '3px solid #3b82f6',
-            borderTop: '3px solid #3b82f6'
-          }}>
-            <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-full h-full object-contain" />
-          </div>
+          <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-32 h-32 object-contain mx-auto mb-4" />
           <h2 className="text-xl font-bold text-slate-800 text-center mb-2">Ошибка подключения</h2>
           <p className="text-red-600 text-sm text-center mb-4">{data.error}</p>
           <div className="bg-slate-50 rounded-lg p-4 mb-4 border border-slate-200">
@@ -234,15 +220,7 @@ export default function App() {
       {/* Sidebar */}
       <aside className={`${sidebarOpen ? 'w-80' : 'w-20'} bg-white border-r border-slate-200 flex flex-col transition-all duration-300 fixed h-full z-40 shadow-sm`}>
         <div className="p-4 border-b border-slate-200 flex items-center gap-3">
-          <div className="relative w-10 h-10 shrink-0">
-            <div className="absolute inset-0 rounded-lg" style={{
-              borderLeft: '3px solid #ef4444',
-              borderBottom: '3px solid #ef4444',
-              borderRight: '3px solid #3b82f6',
-              borderTop: '3px solid #3b82f6'
-            }}></div>
-            <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-10 h-10 rounded-lg object-contain relative z-10" />
-          </div>
+          <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-10 h-10 rounded-lg object-contain shrink-0" />
           {sidebarOpen && (
             <div className="overflow-hidden">
               <h1 className="text-sm font-bold text-slate-800 whitespace-nowrap">АлкоСпас</h1>
