@@ -569,38 +569,38 @@ function EmployeesPage({ data }: { data: ReturnType<typeof useData> }) {
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-200 text-left bg-slate-50">
-                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase">Сотрудник</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase">№</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase">Статус</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase text-right">Вызовы</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase text-right">Приход</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase text-right">Расход</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-600">№</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-600">Сотрудник (ФИО)</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-600">Статус</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-600">Действия</th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map(emp => (
-                <tr key={emp.id} className="border-b border-slate-100 hover:bg-slate-50">
+              {filtered.map((emp, index) => (
+                <tr key={emp.id} className="border-b border-slate-100 hover:bg-blue-50 hover:shadow-md transition-all duration-200 cursor-pointer">
+                  <td className="px-5 py-3 text-sm text-slate-700">{index + 1}</td>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-3">
-                      <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white ${
-                        emp.status === 'Активен' ? 'bg-emerald-500' : emp.status === 'Отпуск' ? 'bg-yellow-500' : 'bg-slate-400'
-                      }`}>{emp.fullName[0]}</div>
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white bg-blue-500">
+                        {emp.fullName.split(' ').slice(0, 2).map(n => n[0]).join('')}
+                      </div>
                       <div>
                         <div className="text-sm font-medium text-slate-800">{emp.fullName}</div>
                         <div className="text-xs text-slate-500">{emp.position}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-3 text-sm text-slate-700 font-mono">{emp.personalNumber}</td>
                   <td className="px-5 py-3">
                     <span className={`px-2 py-1 rounded-full text-xs ${
                       emp.status === 'Активен' ? 'bg-emerald-100 text-emerald-700' :
                       emp.status === 'Отпуск' ? 'bg-yellow-100 text-yellow-700' : 'bg-slate-100 text-slate-600'
                     }`}>{emp.status}</span>
                   </td>
-                  <td className="px-5 py-3 text-right text-sm text-slate-800">{getCalls(emp.id)}</td>
-                  <td className="px-5 py-3 text-right text-sm text-emerald-600">{getArrival(emp.id).toLocaleString('ru-RU')} ₽</td>
-                  <td className="px-5 py-3 text-right text-sm text-blue-600">{getExpenseValue(emp.id).toLocaleString('ru-RU')} ₽</td>
+                  <td className="px-5 py-3">
+                    <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                      Редактировать
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
