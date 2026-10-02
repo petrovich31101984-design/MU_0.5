@@ -410,11 +410,10 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
               notifications.map(notif => (
                 <div
                   key={notif.id}
-                  onClick={() => handleNotificationClick(notif.id)}
-                  className={`p-4 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
-                    notif.type === 'warning' ? 'bg-yellow-50 border-yellow-200 hover:bg-yellow-100' :
-                    notif.type === 'alert' ? 'bg-red-50 border-red-200 hover:bg-red-100' :
-                    'bg-blue-50 border-blue-200 hover:bg-blue-100'
+                  className={`p-4 rounded-lg border ${
+                    notif.type === 'warning' ? 'bg-yellow-50 border-yellow-200' :
+                    notif.type === 'alert' ? 'bg-red-50 border-red-200' :
+                    'bg-blue-50 border-blue-200'
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -422,7 +421,10 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
                       <p className="text-sm text-slate-800 font-medium">{notif.text}</p>
                       <p className="text-xs text-slate-500 mt-1">{notif.time}</p>
                     </div>
-                    <span className="text-slate-400 text-lg">×</span>
+                    <span 
+                      onClick={() => handleNotificationClick(notif.id)}
+                      className="text-red-500 text-lg cursor-pointer hover:text-red-700 transition-colors"
+                    >×</span>
                   </div>
                 </div>
               ))
@@ -448,8 +450,7 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
               messages.map(msg => (
                 <div
                   key={msg.id}
-                  onClick={() => handleMessageClick(msg.id)}
-                  className="p-4 rounded-lg border border-slate-200 bg-slate-50 cursor-pointer transition-all hover:shadow-md hover:bg-slate-100"
+                  className="p-4 rounded-lg border border-slate-200 bg-slate-50"
                 >
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">
@@ -460,7 +461,10 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
                       <p className="text-sm text-slate-600 mt-1">{msg.text}</p>
                       <p className="text-xs text-slate-500 mt-1">{msg.time}</p>
                     </div>
-                    <span className="text-slate-400 text-lg">×</span>
+                    <span 
+                      onClick={() => handleMessageClick(msg.id)}
+                      className="text-red-500 text-lg cursor-pointer hover:text-red-700 transition-colors"
+                    >×</span>
                   </div>
                 </div>
               ))
