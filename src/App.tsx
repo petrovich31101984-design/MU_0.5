@@ -569,10 +569,10 @@ function EmployeesPage({ data }: { data: ReturnType<typeof useData> }) {
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-200 text-left bg-slate-50">
-                <th className="px-5 py-3 text-xs font-medium text-slate-600">№</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-600">Сотрудник (ФИО)</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-600">Статус</th>
-                <th className="px-5 py-3 text-xs font-medium text-slate-600">Действия</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase">№</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase">Сотрудник (ФИО)</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase">Статус</th>
+                <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase">Действия</th>
               </tr>
             </thead>
             <tbody>
