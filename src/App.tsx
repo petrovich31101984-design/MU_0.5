@@ -460,9 +460,9 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
             Активных сотрудников: <span className="font-semibold text-emerald-600">{activeEmployees.length}</span>
           </div>
         </div>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" style={{ maxHeight: '400px' }}>
           <table className="w-full">
-            <thead>
+            <thead className="sticky top-0 bg-slate-50 z-10">
               <tr className="border-b border-slate-200 text-left bg-slate-50">
                 <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase">Сотрудник</th>
                 <th className="px-5 py-3 text-xs font-medium text-slate-600 uppercase">Статус</th>
@@ -473,7 +473,16 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
               </tr>
             </thead>
             <tbody>
-              {employees.filter(e => e.status !== 'Уволен').map(emp => {
+              {employees
+                .filter(e => e.status !== 'Уволен')
+                .sort((a, b) => {
+                  // Сначала активные, потом остальные
+                  if (a.status === 'Активен' && b.status !== 'Активен') return -1;
+                  if (a.status !== 'Активен' && b.status === 'Активен') return 1;
+                  return 0;
+                })
+                .slice(0, 5)
+                .map(emp => {
                 const arr = getArrival(emp.id, lastMonth);
                 const exp = getExpenseValue(emp.id, lastMonth);
                 const bal = arr - exp;
