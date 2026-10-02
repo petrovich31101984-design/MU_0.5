@@ -337,27 +337,35 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Приход за предыдущий месяц */}
         <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm border-l-4 border-l-emerald-500">
-          <div className="text-2xl mb-2">💰</div>
-          <div className="text-2xl font-bold text-emerald-600">{totalArrivalLastMonth.toLocaleString('ru-RU')} ₽</div>
-          <div className="text-sm text-slate-500">Приход за {lastMonthName}</div>
+          <div className="text-sm italic text-slate-600 mb-2">Приход<br />(за предыдущий месяц)</div>
+          <div className="text-2xl font-bold text-emerald-600 mb-1">{totalArrivalLastMonth.toLocaleString('ru-RU')} ₽</div>
+          <div className="text-xs text-slate-500">
+            {lastMonthDate.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })}
+          </div>
         </div>
         {/* Расход за предыдущий месяц */}
         <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm border-l-4 border-l-red-500">
-          <div className="text-2xl mb-2">📤</div>
-          <div className="text-2xl font-bold text-red-600">{totalExpenseLastMonth.toLocaleString('ru-RU')} ₽</div>
-          <div className="text-sm text-slate-500">Расход за {lastMonthName}</div>
+          <div className="text-sm italic text-slate-600 mb-2">Расход<br />(за предыдущий месяц)</div>
+          <div className="text-2xl font-bold text-red-600 mb-1">{totalExpenseLastMonth.toLocaleString('ru-RU')} ₽</div>
+          <div className="text-xs text-slate-500">
+            {lastMonthDate.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })}
+          </div>
         </div>
         {/* Остаток на начало текущего месяца */}
         <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm border-l-4 border-l-blue-500">
-          <div className="text-2xl mb-2">📊</div>
-          <div className="text-2xl font-bold text-blue-600">{balanceStartCurrentMonth.toLocaleString('ru-RU')} ₽</div>
-          <div className="text-sm text-slate-500">Остаток на начало {currentMonthName}</div>
+          <div className="text-sm italic text-slate-600 mb-2">Остаток<br />(на начало текущего месяца)</div>
+          <div className="text-2xl font-bold text-blue-600 mb-1">{balanceStartCurrentMonth.toLocaleString('ru-RU')} ₽</div>
+          <div className="text-xs text-slate-500">
+            {now.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })}
+          </div>
         </div>
         {/* Листов расхода за предыдущий месяц */}
         <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm border-l-4 border-l-orange-500">
-          <div className="text-2xl mb-2">📋</div>
-          <div className="text-2xl font-bold text-orange-600">{totalExpenseCountLastMonth}</div>
-          <div className="text-sm text-slate-500">Листов расхода за {lastMonthName}</div>
+          <div className="text-sm italic text-slate-600 mb-2">Листов расхода<br />(за предыдущий месяц)</div>
+          <div className="text-2xl font-bold text-orange-600 mb-1">{totalExpenseCountLastMonth}</div>
+          <div className="text-xs text-slate-500">
+            {lastMonthDate.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })}
+          </div>
         </div>
       </div>
 
