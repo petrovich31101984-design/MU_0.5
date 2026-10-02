@@ -68,14 +68,21 @@ function SetupPage() {
         <div className="flex justify-center mb-6">
           <div className="relative">
             <div className="absolute inset-0 bg-red-500/10 blur-3xl rounded-full"></div>
-            <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="relative w-56 h-56 object-contain drop-shadow-xl rounded-2xl bg-white p-2" />
+            <div className="relative w-56 h-56 rounded-2xl bg-white p-2" style={{
+              borderLeft: '4px solid #ef4444',
+              borderBottom: '4px solid #ef4444',
+              borderRight: '4px solid #3b82f6',
+              borderTop: '4px solid #3b82f6'
+            }}>
+              <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-full h-full object-contain" />
+            </div>
           </div>
         </div>
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2">
             <span className="bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">АлкоСпас</span>
           </h1>
-          <p className="text-lg text-slate-700 mb-1">Система учёта лекарственных средств</p>
+          <p className="text-lg text-slate-700 mb-1">Система медицинского учета</p>
           <p className="text-sm text-slate-500">Выездное подразделение медицинской помощи</p>
         </div>
 
@@ -154,7 +161,14 @@ export default function App() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-48 h-48 object-contain mx-auto mb-6 animate-pulse" />
+          <div className="w-48 h-48 mx-auto mb-6 animate-pulse rounded-2xl bg-white p-2" style={{
+            borderLeft: '4px solid #ef4444',
+            borderBottom: '4px solid #ef4444',
+            borderRight: '4px solid #3b82f6',
+            borderTop: '4px solid #3b82f6'
+          }}>
+            <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-full h-full object-contain" />
+          </div>
           <div className="text-slate-800 text-xl font-semibold mb-2">Загрузка данных...</div>
           <div className="text-slate-500 text-sm">Подключение к Google Sheets</div>
           <div className="mt-6 flex justify-center gap-1.5">
@@ -171,7 +185,14 @@ export default function App() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl p-8 border border-red-200 shadow-lg max-w-lg w-full">
-          <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-32 h-32 object-contain mx-auto mb-4" />
+          <div className="w-32 h-32 mx-auto mb-4 rounded-2xl bg-white p-2" style={{
+            borderLeft: '3px solid #ef4444',
+            borderBottom: '3px solid #ef4444',
+            borderRight: '3px solid #3b82f6',
+            borderTop: '3px solid #3b82f6'
+          }}>
+            <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-full h-full object-contain" />
+          </div>
           <h2 className="text-xl font-bold text-slate-800 text-center mb-2">Ошибка подключения</h2>
           <p className="text-red-600 text-sm text-center mb-4">{data.error}</p>
           <div className="bg-slate-50 rounded-lg p-4 mb-4 border border-slate-200">
@@ -220,11 +241,19 @@ export default function App() {
       {/* Sidebar */}
       <aside className={`${sidebarOpen ? 'w-80' : 'w-20'} bg-white border-r border-slate-200 flex flex-col transition-all duration-300 fixed h-full z-40 shadow-sm`}>
         <div className="p-4 border-b border-slate-200 flex items-center gap-3">
-          <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-10 h-10 rounded-lg object-contain shrink-0" />
+          <div className="relative w-10 h-10 shrink-0">
+            <div className="absolute inset-0 rounded-lg" style={{
+              borderLeft: '3px solid #ef4444',
+              borderBottom: '3px solid #ef4444',
+              borderRight: '3px solid #3b82f6',
+              borderTop: '3px solid #3b82f6'
+            }}></div>
+            <img src="https://avatars.mds.yandex.net/i?id=e00a0fe18058bd1b9bd6695beaec20f7_l-5232129-images-thumbs&n=13" alt="АлкоСпас" className="w-10 h-10 rounded-lg object-contain relative z-10" />
+          </div>
           {sidebarOpen && (
             <div className="overflow-hidden">
               <h1 className="text-sm font-bold text-slate-800 whitespace-nowrap">АлкоСпас</h1>
-              <p className="text-xs text-slate-500 leading-tight">Система учёта лекарственных средств</p>
+              <p className="text-xs text-slate-500 leading-tight">Система медицинского учета</p>
               <p className="text-xs text-emerald-600 font-semibold">(v. 0.5)</p>
             </div>
           )}
