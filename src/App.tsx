@@ -303,42 +303,61 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
   const { employees, nomenclature, arrivals, expenses, returns } = data;
   const now = new Date();
   const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  
+  // Предыдущий месяц
+  const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const lastMonth = `${lastMonthDate.getFullYear()}-${String(lastMonthDate.getMonth() + 1).padStart(2, '0')}`;
+  
+  // Названия месяцев
+  const monthNames = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+  const lastMonthName = monthNames[lastMonthDate.getMonth()];
+  const currentMonthName = monthNames[now.getMonth()];
+  
   const activeEmployees = employees.filter(e => e.status === 'Активен');
 
-  const getArrival = (empId: string) => arrivals.filter(a => a.employeeId === empId && a.month === currentMonth).reduce((s, a) => s + a.amount, 0);
-  const getExpenseValue = (empId: string) => expenses.filter(e => e.employeeId === empId && e.month === currentMonth).reduce((s, e) => {
+  // Расчеты за предыдущий месяц
+  const getArrival = (empId: string, month: string) => arrivals.filter(a => a.employeeId === empId && a.month === month).reduce((s, a) => s + a.amount, 0);
+  const getExpenseValue = (empId: string, month: string) => expenses.filter(e => e.employeeId === empId && e.month === month).reduce((s, e) => {
     const nom = nomenclature.find(n => n.id === e.nomenclatureId);
     return s + (nom ? nom.currentPrice * e.quantity : 0);
   }, 0);
-  const getCalls = (empId: string) => new Set(expenses.filter(e => e.employeeId === empId && e.month === currentMonth).map(e => e.callId)).size;
+  const getExpenseCount = (empId: string, month: string) => expenses.filter(e => e.employeeId === empId && e.month === month).length;
 
-  const totalArrival = activeEmployees.reduce((s, e) => s + getArrival(e.id), 0);
-  const totalExpense = activeEmployees.reduce((s, e) => s + getExpenseValue(e.id), 0);
-  const totalCalls = activeEmployees.reduce((s, e) => s + getCalls(e.id), 0);
+  const totalArrivalLastMonth = activeEmployees.reduce((s, e) => s + getArrival(e.id, lastMonth), 0);
+  const totalExpenseLastMonth = activeEmployees.reduce((s, e) => s + getExpenseValue(e.id, lastMonth), 0);
+  const totalExpenseCountLastMonth = activeEmployees.reduce((s, e) => s + getExpenseCount(e.id, lastMonth), 0);
+  
+  // Остаток на начало текущего месяца = Приход за прошлый месяц - Расход за прошлый месяц
+  const balanceStartCurrentMonth = totalArrivalLastMonth - totalExpenseLastMonth;
+  
   const pendingReturns = returns.filter(r => r.status === 'Новый').length;
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+        {/* Приход за предыдущий месяц */}
+        <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm border-l-4 border-l-emerald-500">
           <div className="text-2xl mb-2">💰</div>
-          <div className="text-2xl font-bold text-emerald-600">{totalArrival.toLocaleString('ru-RU')} ₽</div>
-          <div className="text-sm text-slate-500">Общий приход</div>
+          <div className="text-2xl font-bold text-emerald-600">{totalArrivalLastMonth.toLocaleString('ru-RU')} ₽</div>
+          <div className="text-sm text-slate-500">Приход за {lastMonthName}</div>
         </div>
-        <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+        {/* Расход за предыдущий месяц */}
+        <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm border-l-4 border-l-red-500">
           <div className="text-2xl mb-2">📤</div>
-          <div className="text-2xl font-bold text-blue-600">{totalExpense.toLocaleString('ru-RU')} ₽</div>
-          <div className="text-sm text-slate-500">Общий расход</div>
+          <div className="text-2xl font-bold text-red-600">{totalExpenseLastMonth.toLocaleString('ru-RU')} ₽</div>
+          <div className="text-sm text-slate-500">Расход за {lastMonthName}</div>
         </div>
-        <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+        {/* Остаток на начало текущего месяца */}
+        <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm border-l-4 border-l-blue-500">
           <div className="text-2xl mb-2">📊</div>
-          <div className="text-2xl font-bold text-slate-800">{(totalArrival - totalExpense).toLocaleString('ru-RU')} ₽</div>
-          <div className="text-sm text-slate-500">Остаток</div>
+          <div className="text-2xl font-bold text-blue-600">{balanceStartCurrentMonth.toLocaleString('ru-RU')} ₽</div>
+          <div className="text-sm text-slate-500">Остаток на начало {currentMonthName}</div>
         </div>
-        <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
-          <div className="text-2xl mb-2">🚑</div>
-          <div className="text-2xl font-bold text-slate-800">{totalCalls}</div>
-          <div className="text-sm text-slate-500">Вызовов за месяц</div>
+        {/* Листов расхода за предыдущий месяц */}
+        <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm border-l-4 border-l-orange-500">
+          <div className="text-2xl mb-2">📋</div>
+          <div className="text-2xl font-bold text-orange-600">{totalExpenseCountLastMonth}</div>
+          <div className="text-sm text-slate-500">Листов расхода за {lastMonthName}</div>
         </div>
       </div>
 
@@ -370,10 +389,10 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
             </thead>
             <tbody>
               {employees.filter(e => e.status !== 'Уволен').map(emp => {
-                const arr = getArrival(emp.id);
-                const exp = getExpenseValue(emp.id);
+                const arr = getArrival(emp.id, currentMonth);
+                const exp = getExpenseValue(emp.id, currentMonth);
                 const bal = arr - exp;
-                const calls = getCalls(emp.id);
+                const calls = getExpenseCount(emp.id, currentMonth);
                 return (
                   <tr key={emp.id} className="border-b border-slate-100 hover:bg-slate-50">
                     <td className="px-5 py-3">
