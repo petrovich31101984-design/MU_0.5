@@ -476,8 +476,11 @@ function Dashboard({ data }: { data: ReturnType<typeof useData> }) {
       )}
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
-        <div className="p-5 border-b border-slate-200 bg-slate-50">
-          <h3 className="text-lg font-bold text-slate-800">📊 Сводка по сотрудникам ({currentMonth})</h3>
+        <div className="p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+          <h3 className="text-lg font-bold text-slate-800">Сотрудники — общая сводка</h3>
+          <div className="text-sm text-slate-600">
+            Активных сотрудников: <span className="font-semibold text-emerald-600">{activeEmployees.length}</span>
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
