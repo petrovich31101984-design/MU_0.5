@@ -557,6 +557,27 @@ function EmployeesPage({ data }: { data: ReturnType<typeof useData> }) {
     setShowAdd(false); data.refresh();
   };
 
+  const handleToggleBlock = async (id: string, block: boolean) => {
+    if (confirm(block ? 'Заблокировать сотрудника?' : 'Разблокировать сотрудника?')) {
+      await gs.updateEmployee(id, { blocked: block });
+      data.refresh();
+    }
+  };
+
+  const handleFire = async (id: string) => {
+    if (confirm('Уволить сотрудника? Сотрудник будет перемещен в архив.')) {
+      await gs.updateEmployee(id, { status: 'Уволен' });
+      data.refresh();
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm('Удалить сотрудника? Это действие нельзя отменить.')) {
+      await gs.deleteEmployee(id);
+      data.refresh();
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex gap-3">
@@ -595,9 +616,48 @@ function EmployeesPage({ data }: { data: ReturnType<typeof useData> }) {
                     }`}>{emp.status}</span>
                   </td>
                   <td className="px-5 py-3">
-                    <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                      Редактировать
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); /* TODO: открыть редактирование */ }}
+                        className="text-blue-600 hover:text-blue-800 text-lg"
+                        title="Редактировать"
+                      >
+                        ✏️
+                      </button>
+                      {emp.blocked ? (
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleToggleBlock(emp.id, false); }}
+                          className="text-green-600 hover:text-green-800 text-lg"
+                          title="Разблокировать"
+                        >
+                          🔓
+                        </button>
+                      ) : (
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleToggleBlock(emp.id, true); }}
+                          className="text-orange-600 hover:text-orange-800 text-lg"
+                          title="Заблокировать"
+                        >
+                          🔒
+                        </button>
+                      )}
+                      {emp.status !== 'Уволен' && (
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleFire(emp.id); }}
+                          className="text-red-600 hover:text-red-800 text-lg"
+                          title="Уволить"
+                        >
+                          🚫
+                        </button>
+                      )}
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); handleDelete(emp.id); }}
+                        className="text-gray-600 hover:text-gray-800 text-lg"
+                        title="Удалить"
+                      >
+                        🗑️
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

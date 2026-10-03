@@ -347,6 +347,14 @@ export async function addEmployee(employee: Partial<Employee>): Promise<void> {
   await postData('addEmployee', employee);
 }
 
+export async function updateEmployee(id: string, data: Partial<Employee>): Promise<void> {
+  await postData('updateEmployee', { id, data });
+}
+
+export async function deleteEmployee(id: string): Promise<void> {
+  await postData('deleteEmployee', { id });
+}
+
 export async function addArrival(arrival: Partial<Arrival>): Promise<void> {
   await postData('addArrival', arrival);
 }
@@ -369,8 +377,4 @@ export async function addAuditLog(log: Partial<AuditEntry>): Promise<void> {
 
 export async function updateNomenclature(id: string, data: any): Promise<void> {
   await postData('updateNomenclature', { id, ...data });
-}
-
-export async function updateEmployee(id: string, data: any): Promise<void> {
-  await postData('updateEmployee', { id, data });
 }

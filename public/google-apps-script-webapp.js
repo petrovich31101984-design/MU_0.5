@@ -76,6 +76,12 @@ function doPost(e) {
       case 'addEmployee':
         addEmployeeRow(data.data);
         return jsonResponse({ success: true });
+      case 'updateEmployee':
+        updateEmployeeRow(data.id, data.data);
+        return jsonResponse({ success: true });
+      case 'deleteEmployee':
+        deleteEmployeeRow(data.id);
+        return jsonResponse({ success: true });
       case 'addArrival':
         addArrivalRow(data.data);
         return jsonResponse({ success: true });
@@ -174,6 +180,35 @@ function addEmployeeRow(data) {
     data.note || ''
   ]);
   writeAudit('Сотрудники', data.id, 'Создание', '', 'Сотрудник: ' + data.fullName);
+}
+
+function updateEmployeeRow(id, data) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Сотрудники');
+  const allData = sheet.getDataRange().getValues();
+  
+  for (let i = 1; i < allData.length; i++) {
+    if (allData[i][0] === id) {
+      if (data.status !== undefined) sheet.getRange(i + 1, 5).setValue(data.status);
+      if (data.blocked !== undefined) sheet.getRange(i + 1, 9).setValue(data.blocked ? 'ДА' : 'НЕТ');
+      if (data.note !== undefined) sheet.getRange(i + 1, 14).setValue(data.note);
+      break;
+    }
+  }
+  
+  writeAudit('Сотрудники', id, 'Изменение', '', JSON.stringify(data));
+}
+
+function deleteEmployeeRow(id) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Сотрудники');
+  const allData = sheet.getDataRange().getValues();
+  
+  for (let i = 1; i < allData.length; i++) {
+    if (allData[i][0] === id) {
+      sheet.deleteRow(i + 1);
+      writeAudit('Сотрудники', id, 'Удаление', 'Сотрудник: ' + allData[i][2], '');
+      break;
+    }
+  }
 }
 
 function addArrivalRow(data) {
