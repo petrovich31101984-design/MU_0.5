@@ -533,6 +533,7 @@ function EmployeesPage({ data }: { data: ReturnType<typeof useData> }) {
   const { employees, arrivals, expenses, nomenclature } = data;
   const [search, setSearch] = useState('');
   const [showAdd, setShowAdd] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<gs.Employee | null>(null);
   const now = new Date();
   const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
@@ -577,17 +578,14 @@ function EmployeesPage({ data }: { data: ReturnType<typeof useData> }) {
             </thead>
             <tbody>
               {filtered.map((emp, index) => (
-                <tr key={emp.id} className="border-b border-slate-100 hover:bg-blue-50 hover:shadow-md transition-all duration-200 cursor-pointer">
+                <tr key={emp.id} onClick={() => setSelectedEmployee(emp)} className="border-b border-slate-100 hover:bg-blue-50 hover:shadow-md transition-all duration-200 cursor-pointer">
                   <td className="px-5 py-3 text-sm text-slate-700">{index + 1}</td>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white bg-blue-500">
                         {emp.fullName.split(' ').slice(0, 2).map(n => n[0]).join('')}
                       </div>
-                      <div>
-                        <div className="text-sm font-medium text-slate-800">{emp.fullName}</div>
-                        <div className="text-xs text-slate-500">{emp.position}</div>
-                      </div>
+                      <div className="text-sm font-medium text-slate-800">{emp.fullName}</div>
                     </div>
                   </td>
                   <td className="px-5 py-3">
@@ -614,6 +612,47 @@ function EmployeesPage({ data }: { data: ReturnType<typeof useData> }) {
         )}
       </div>
       {showAdd && <AddEmployeeModal onClose={() => setShowAdd(false)} onAdd={handleAdd} />}
+      {selectedEmployee && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4" onClick={() => setSelectedEmployee(null)}>
+          <div className="bg-white rounded-2xl border border-slate-200 w-full max-w-md shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="p-6 border-b border-slate-200 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-slate-800">Личный кабинет сотрудника</h3>
+              <button onClick={() => setSelectedEmployee(null)} className="text-slate-400 hover:text-slate-600 text-2xl">×</button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold text-white bg-blue-500">
+                  {selectedEmployee.fullName.split(' ').slice(0, 2).map(n => n[0]).join('')}
+                </div>
+                <div>
+                  <div className="text-xl font-semibold text-slate-800">{selectedEmployee.fullName}</div>
+                  <div className="text-sm text-slate-500">Персональный номер: {selectedEmployee.personalNumber}</div>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <span className="text-sm text-slate-600">Должность</span>
+                  <span className="text-sm font-medium text-slate-800">{selectedEmployee.position}</span>
+                </div>
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <span className="text-sm text-slate-600">Телефон</span>
+                  <span className="text-sm font-medium text-slate-800">{selectedEmployee.phone || 'Не указан'}</span>
+                </div>
+                <div className="flex justify-between py-2">
+                  <span className="text-sm text-slate-600">Статус</span>
+                  <span className={`px-2 py-1 rounded-full text-xs ${
+                    selectedEmployee.status === 'Активен' ? 'bg-emerald-100 text-emerald-700' :
+                    selectedEmployee.status === 'Отпуск' ? 'bg-yellow-100 text-yellow-700' : 'bg-slate-100 text-slate-600'
+                  }`}>{selectedEmployee.status}</span>
+                </div>
+              </div>
+            </div>
+            <div className="p-6 border-t border-slate-200 flex justify-end">
+              <button onClick={() => setSelectedEmployee(null)} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white font-medium">Закрыть</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
